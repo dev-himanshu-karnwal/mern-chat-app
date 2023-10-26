@@ -1,0 +1,11 @@
+{
+  "name": "mern-chat-app",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon backend/server.js"
+  },
+  "author": "Himanshu & Harsh",
+  "license": "ISC"
+}
