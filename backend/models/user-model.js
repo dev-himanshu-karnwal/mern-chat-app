@@ -1,22 +1,27 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
+const { isEmail } = require("validator");
 
 const userSchema = new mongoose.Schema(
   {
     name: {
       type: "String",
-      required: true,
+      required: [true, "Name is required for creating a user"],
       trim: true,
     },
     email: {
       type: "String",
-      unique: true,
-      required: true,
+      unique: [true, "Email is must to be provided"],
+      required: [true, "Email is required for creating a user"],
       trim: true,
+      validate: {
+        validator: (email) => isEmail(email),
+        message: `Enter a valid email`,
+      },
     },
     password: {
       type: "String",
-      required: true,
+      required: [true, "Password is required for creating a user"],
     },
     pic: {
       type: "String",
@@ -30,7 +35,7 @@ const userSchema = new mongoose.Schema(
       default: false,
     },
   },
-  { timestaps: true }
+  { timestamps: true }
 );
 
 userSchema.pre("save", async function (next) {
