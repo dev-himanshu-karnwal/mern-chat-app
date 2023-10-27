@@ -1,6 +1,6 @@
 const path = require("path");
-const User = require(path.join(__dirname, "./../models/user-model"));
 const jwt = require("jsonwebtoken");
+const User = require(path.join(__dirname, "./../models/user-model"));
 const catchAsync = require(path.join(__dirname, "./../utils/catch-async"));
 const AppError = require(path.join(__dirname, "./../utils/app-error.js"));
 
@@ -49,4 +49,20 @@ exports.login = catchAsync(async (req, res, next) => {
     data: { user },
     token: signToken(user._id),
   });
+});
+
+exports.searchUser = catchAsync(async (req, res, next) => {
+  const searchTerm = req.query.search;
+  const keyword = searchTerm
+    ? {
+        $or: [
+          { name: { $regex: searchTerm, $options: "i" } },
+          { email: { $regex: searchTerm, $options: "i" } },
+        ],
+      }
+    : {};
+
+  const users = await User.find(keyword); //.find({ _id: { $ne: req.user._id } });
+
+  res.json(users);
 });

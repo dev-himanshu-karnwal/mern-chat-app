@@ -7,7 +7,8 @@ const userController = require(path.join(
 
 const router = express.Router();
 
+router.get("/", userController.searchUser);
 router.post("/signup", userController.signUp);
-router.get("/login", userController.login);
+router.post("/login", userController.login);
 
 module.exports = router;
