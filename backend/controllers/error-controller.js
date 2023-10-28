@@ -25,7 +25,8 @@ const sendErrorProd = (err, req, res) => {
 
 const handleJWTError = (err) => new AppError(`Invalid Token! Login Again`, 401);
 
-const handleJWTExpiredError = (err) => new AppError("JWT Expired..", 401);
+const handleJWTExpiredError = (err) =>
+  new AppError("Your login session has Expired. Login again", 401);
 
 const handleCastErrorDB = (err) =>
   new AppError(`Invalid ${err.path}: ${err.value}`, 400);
@@ -55,12 +56,10 @@ const globalErrorHandler = (err, req, res, next) => {
   } else if (process.env.NODE_ENV === "production") {
     let error = err;
     if (err.name === "CastError") error = handleCastErrorDB(err);
-    else if (err.code === 11000) error = handleDuplicateFieldsErrorDB(err);
-    else if (err.name === "ValidationError")
-      error = handleValidationErrorDB(err);
-    else if (err.name === "JsonWebTokenError") error = handleJWTError(err);
-    else if (err.name === "TokenExpiredError")
-      error = handleJWTExpiredError(err);
+    if (err.code === 11000) error = handleDuplicateFieldsErrorDB(err);
+    if (err.name === "ValidationError") error = handleValidationErrorDB(err);
+    if (err.name === "JsonWebTokenError") error = handleJWTError(err);
+    if (err.name === "TokenExpiredError") error = handleJWTExpiredError(err);
 
     sendErrorProd(error, req, res);
   }
