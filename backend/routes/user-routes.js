@@ -4,11 +4,16 @@ const userController = require(path.join(
   __dirname,
   "./../controllers/user-controllers"
 ));
+const authController = require(path.join(
+  __dirname,
+  "./../controllers/auth-controllers"
+));
 
 const router = express.Router();
 
-router.get("/", userController.searchUser);
-router.post("/signup", userController.signUp);
-router.post("/login", userController.login);
+router.post("/signup", authController.signUp);
+router.post("/login", authController.login);
+
+router.get("/", authController.protect, userController.searchUser);
 
 module.exports = router;
