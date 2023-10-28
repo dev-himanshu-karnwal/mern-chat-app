@@ -29,10 +29,9 @@ const userSchema = new mongoose.Schema(
       default:
         "https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar-icon-25.jpg",
     },
-    isAdmin: {
-      type: Boolean,
-      required: true,
-      default: false,
+    role: {
+      type: String,
+      default: "user",
     },
   },
   { timestamps: true }
@@ -43,6 +42,11 @@ userSchema.pre("save", async function (next) {
 
   const salt = await bcrypt.genSalt(10);
   this.password = await bcrypt.hash(this.password, salt);
+  next();
+});
+
+userSchema.pre(/^find/, function (next) {
+  this.find({ role: { $ne: "admin" } });
   next();
 });
 

@@ -4,21 +4,32 @@ const messageSchema = new mongoose.Schema(
   {
     sender: {
       type: mongoose.Types.ObjectId,
-      required: true,
+      required: [true, "Sender id is required to send a message"],
       ref: "User",
     },
     content: {
       type: String,
-      required: true,
+      required: [true, "Message Content is required to send a message"],
       trim: true,
     },
-    chat: {
-      type: mongoose.Types.ObjectId,
-      ref: "Chat",
+    isGroupMessage: {
+      type: Boolean,
+      required: [
+        true,
+        "Specifying wether mesaage is a group message or not is required",
+      ],
     },
-    readBy: [
+    reciever: {
+      type: mongoose.Types.ObjectId,
+      ref: "User",
+    },
+    group: {
+      type: mongoose.Types.ObjectId,
+      ref: "Group",
+    },
+    deletedFor: [
       {
-        type: mongoose.Schema.Types.ObjectId,
+        type: mongoose.Types.ObjectId,
         ref: "User",
       },
     ],
