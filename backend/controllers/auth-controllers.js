@@ -41,7 +41,7 @@ exports.login = catchAsync(async (req, res, next) => {
   const { email, password } = req.body;
 
   const user = await User.findOne({ email });
-  if (!user || !user.matchPassword(password)) {
+  if (!user || !(await user.matchPassword(password))) {
     return next(new AppError("Invalid login email or password.", 401));
   }
 
