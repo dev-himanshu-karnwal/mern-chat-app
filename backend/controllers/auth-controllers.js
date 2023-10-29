@@ -1,6 +1,5 @@
 const path = require("path");
 const jwt = require("jsonwebtoken");
-const { group } = require("console");
 const User = require(path.join(__dirname, "./../models/user-model.js"));
 const Group = require(path.join(__dirname, "./../models/group-model.js"));
 const catchAsync = require(path.join(__dirname, "./../utils/catch-async"));
@@ -41,7 +40,8 @@ exports.login = catchAsync(async (req, res, next) => {
   const { email, password } = req.body;
 
   const user = await User.findOne({ email });
-  if (!user || !user.matchPassword(password)) {
+
+  if (!user || !(await user.matchPassword(password))) {
     return next(new AppError("Invalid login email or password.", 401));
   }
 
@@ -78,16 +78,18 @@ exports.protect = catchAsync(async (req, res, next) => {
 });
 
 exports.restrictToGroupAdmin = catchAsync(async (req, res, next) => {
-  const groupId = req.params.id;
+  const group = await Group.findById(req.params.id);
 
-  const group = await Group.findById(groupId);
   if (!group) {
-    return next(new AppError("Invalid Group ID", 404));
+    return next(new AppError("Invalid Group ID in Request URL", 404));
   }
 
-  if (group.admin !== req.user._id) {
+  if (group.admin.toString() !== req.user._id.toString()) {
     return next(
-      new AppError("Only admins are allowed to perform the action", 401)
+      new AppError(
+        "Only admin of this group is allowed to perform the action",
+        401
+      )
     );
   }
 
