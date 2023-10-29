@@ -34,8 +34,161 @@ exports.createGroup = catchAsync(async (req, res, next) => {
   });
 });
 
-exports.deleteGroup = catchAsync(async (req, res, next) => {});
-exports.getGroupInfo = catchAsync(async (req, res, next) => {});
-exports.renameGroup = catchAsync(async (req, res, next) => {});
-exports.addMember = catchAsync(async (req, res, next) => {});
-exports.removeMember = catchAsync(async (req, res, next) => {});
+exports.deleteGroup = catchAsync(async (req, res, next) => {
+  await Group.findByIdAndDelete(req.params.id);
+
+  res.status(204).json({
+    status: "success",
+    message: "Group Deleted Successfully",
+    data: null,
+  });
+});
+
+exports.getGroupInfo = catchAsync(async (req, res, next) => {
+  const groupId = req.params.id;
+
+  const group = await Group.findById(groupId)
+    .populate({ path: "admin", select: "name email pic" })
+    .populate({ path: "members", select: "name email pic" });
+  if (!group) {
+    return next(new AppError("Invalid group ID", 401));
+  }
+
+  if (
+    group.members.find(
+      (member) => member._id.toString() === req.user._id.toString()
+    ) ||
+    group.admin._id.toString() === req.user._id.toString()
+  )
+    return res.status(200).json({
+      status: "success",
+      message: "Group Info. Retrieved Successfully",
+      data: { group },
+    });
+
+  return next(
+    new AppError(
+      "Only a Group admin or member has access to group information",
+      401
+    )
+  );
+});
+
+exports.renameGroup = catchAsync(async (req, res, next) => {
+  const name = req.body.name;
+
+  if (!name) {
+    return next(
+      new AppError("Group name must be provided in request body", 400)
+    );
+  }
+
+  const group = await Group.findByIdAndUpdate(
+    req.params.id,
+    { name },
+    { new: true }
+  )
+    .populate({ path: "admin", select: "name pic email" })
+    .populate({ path: "members", select: "name pic email" });
+
+  if (!group) {
+    return next(new AppError("Invalid group ID", 404));
+  }
+
+  return res.status(202).json({
+    status: "success",
+    message: "Group name updated successfully",
+    data: { updatedGroup: group },
+  });
+});
+
+exports.addMember = catchAsync(async (req, res, next) => {
+  const groupId = req.params.id;
+
+  const { members } = req.body;
+  if (!members) {
+    return next(
+      new AppError(
+        "Members that are to be added must be provided in request body",
+        400
+      )
+    );
+  }
+
+  if (typeof members !== "object") {
+    return next(new AppError("Members must be array of user ids", 400));
+  }
+
+  for (const member of members) {
+    try {
+      await User.findById(member);
+    } catch (error) {
+      return next(new AppError(`Invalid member ID "${member}" given`, 400));
+    }
+  }
+
+  const group = await Group.findByIdAndUpdate(
+    groupId,
+    { $addToSet: { members: { $each: members } } },
+    { new: true }
+  )
+    .populate({ path: "admin", select: "name pic email" })
+    .populate({ path: "members", select: "name pic email" });
+
+  if (!group) {
+    return next(
+      new AppError("Error adding members, try again after some time", 500)
+    );
+  }
+
+  res.status(202).json({
+    status: "success",
+    message: "Members added successfully",
+    data: { updatedGroup: group },
+  });
+});
+
+exports.removeMember = catchAsync(async (req, res, next) => {
+  const { members } = req.body;
+
+  if (!members) {
+    return next(
+      new AppError(
+        "Members that are to be removed must be provided in request body",
+        400
+      )
+    );
+  }
+
+  if (typeof members !== "object") {
+    return next(new AppError("Members must be array of user ids", 400));
+  }
+
+  for (const member of members) {
+    try {
+      await User.findById(member);
+    } catch (error) {
+      return next(new AppError(`Invalid member ID "${member}" given`, 400));
+    }
+  }
+
+  const group = await Group.findByIdAndUpdate(
+    req.params.id,
+    { $pull: { members: { $in: members } } },
+    { new: true }
+  )
+    .populate({ path: "admin", select: "name pic email" })
+    .populate({ path: "members", select: "name pic email" });
+
+  if (!group) {
+    return next(
+      new AppError("Error removing members, try again after some time", 500)
+    );
+  }
+
+  res.status(202).json({
+    status: "success",
+    message: "Members removed successfully",
+    data: { updatedGroup: group },
+  });
+});
