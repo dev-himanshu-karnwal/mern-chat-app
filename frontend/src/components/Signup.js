@@ -66,13 +66,13 @@ const Signup = () => {
   };
 
   return (
-    <div className="bg-gray-900 min-h-screen flex flex-col">
+    <div className="bg-authbg bg-cover bg-center  bg-no-repeat min-h-screen flex flex-col">
       <div className="container max-w-lg mx-auto flex-1 flex flex-col items-center justify-center px-2">
-        <div className="bg-red-700 px-6 py-8 rounded-lg shadow-2xl text-black w-full">
-          <h1 className="mb-8 text-3xl text-center text-gray-300">Sign up</h1>
+        <div className="bg-transparent backdrop-opacity-70 px-6 py-8 rounded-lg shadow-2xl text-black w-full">
+          <h1 className="mb-8 text-3xl  font-extrabold text-center text-purple-700 uppercase">Sign up</h1>
           <input
             type="text"
-            className="block border border-grey-light w-full p-3 rounded mb-4 focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500"
+            className="block border-4 border-grey-light w-full p-3 rounded mb-4 focus:outline-none focus:border-green-400 "
             name="fullname"
             placeholder="Full Name"
             onChange={(e) =>
@@ -84,7 +84,7 @@ const Signup = () => {
           />
           <input
             type="text"
-            className="block border border-grey-light w-full p-3 rounded mb-4"
+            className="block border border-grey-light w-full p-3 rounded mb-4  focus:outline-none focus:border-green-400"
             name="email"
             placeholder="Email"
             onChange={(e) =>
@@ -97,7 +97,7 @@ const Signup = () => {
 
           <input
             type="password"
-            className="block border border-grey-light w-full p-3 rounded mb-4"
+            className="block border border-grey-light w-full p-3 rounded mb-4 focus:outline-none focus:border-green-400"
             name="password"
             placeholder="Password"
             onChange={(e) =>
@@ -132,14 +132,14 @@ const Signup = () => {
           <button
             type="submit"
             onClick={handleCreateAccount}
-            className="w-full text-center py-3 bg-white font-bold rounded bg-green text-black hover:bg-green-dark focus:outline-none my-1"
+            className="w-full text-center py-3  bg-white font-bold rounded bg-green text-black hover:bg-green-500 my-1"
           >
             Create Account
           </button>
           <button
             type="reset" // Add this line
             onClick={handelresetfield}
-            className="w-full text-center py-3 bg-white font-bold rounded bg-green text-black hover:bg-green-dark focus:outline-none my-1"
+            className="w-full text-center py-3 bg-white font-bold rounded bg-green text-black hover:bg-purple-700 my-1"
           >
             Reset
           </button>
@@ -149,7 +149,7 @@ const Signup = () => {
           Already have an account?
           <Link
             className="no-underline border-b border-blue text-blue"
-            to="login"
+            to="/login"
           >
             Log in
           </Link>

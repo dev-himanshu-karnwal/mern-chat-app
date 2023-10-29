@@ -11,6 +11,10 @@ const approuter = createBrowserRouter([
     element: <Signup />,
   },
   {
+    path: "/signup",
+    element: <Signup />,
+  },
+  {
     path: "/login",
     element: <Login />,
   },
