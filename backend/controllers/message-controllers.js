@@ -16,6 +16,12 @@ exports.createMessage = catchAsync(async (req, res, next) => {
   let groupMessaged;
 
   if (isGroupMessage) {
+    if (!group) {
+      return next(
+        new AppError("Group ID is required to send a group message", 400)
+      );
+    }
+
     try {
       groupMessaged = await Group.findById(group);
       msgObj.group = group;
@@ -23,6 +29,16 @@ exports.createMessage = catchAsync(async (req, res, next) => {
       return next(new AppError(`Invalid Group ID "${group}"`, 400));
     }
   } else {
+    if (!reciever) {
+      return next(
+        new AppError("Reciever ID is required to send a message", 400)
+      );
+    }
+
+    if (req.user._id.toString() === reciever) {
+      return next(new AppError("You cannot send a message to yourself", 400));
+    }
+
     try {
       await User.findById(reciever);
       msgObj.reciever = reciever;
@@ -128,4 +144,69 @@ exports.completelyDeleteMessage = catchAsync(async (req, res, next) => {
   });
 });
 
-exports.deleteMessage = catchAsync(async (req, res, next) => {});
+exports.deleteMessage = catchAsync(async (req, res, next) => {
+  let message;
+  try {
+    message = await Message.findById(req.params.id);
+    if (!message) throw new Error();
+  } catch (err) {
+    return next(new AppError(`Invalid Message ID "${req.params.id}"`, 400));
+  }
+
+  const participantsEmail = [];
+
+  message = await message.populate({
+    path: "sender reciever",
+    select: "name email",
+  });
+
+  if (message.isGroupMessage) {
+    message = await message.populate({
+      path: "group",
+      select: "members admin",
+      populate: {
+        path: "members admin",
+        select: "name email",
+      },
+    });
+
+    participantsEmail.push(
+      message.group.admin.email,
+      ...[...message.group.members].map((member) => member.email)
+    );
+  } else {
+    participantsEmail.push(message.sender.email, message.reciever.email);
+  }
+
+  if (!participantsEmail.includes(req.user.email)) {
+    return next(
+      new AppError(
+        "You are not a participant of this messsage, so can't delete it",
+        401
+      )
+    );
+  }
+
+  if (message.deletedFor.includes(req.user._id)) {
+    return next(new AppError("You have already deleted this message", 400));
+  }
+
+  message.deletedFor.push(req.user._id);
+  await message.save();
+
+  if (message.isGroupMessage) {
+    if (message.deletedFor.length === message.group.members.length + 1) {
+      await Message.deleteOne(message);
+    }
+  } else {
+    if (message.deletedFor.length === 2) {
+      await Message.deleteOne(message);
+    }
+  }
+
+  res.status(202).json({
+    status: "success",
+    message: "Message successfully deleted for your account",
+    data: null,
+  });
+});

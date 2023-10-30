@@ -13,11 +13,14 @@ const router = express.Router();
 
 router.use(authController.protect);
 
-router.post("/", groupController.createGroup);
-router.get("/:id", groupController.getGroupInfo);
+router
+  .route("/")
+  .get(groupController.getAllRecentGroups)
+  .post(groupController.createGroup);
 
 router
   .route("/:id")
+  .get(groupController.getGroupInfo)
   .delete(authController.restrictToGroupAdmin, groupController.deleteGroup)
   .patch(authController.restrictToGroupAdmin, groupController.renameGroup);
 

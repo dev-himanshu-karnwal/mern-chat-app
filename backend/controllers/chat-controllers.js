@@ -1,5 +1,4 @@
 const path = require("path");
-const User = require(path.join(__dirname, "./../models/user-model.js"));
 const Chat = require(path.join(__dirname, "./../models/chat-model.js"));
 const catchAsync = require(path.join(__dirname, "./../utils/catch-async"));
 const AppError = require(path.join(__dirname, "./../utils/app-error"));
@@ -29,4 +28,42 @@ exports.getChat = catchAsync(async (req, res, next) => {
   });
 });
 
-exports.deleteChat = catchAsync(async (req, res, next) => {});
+exports.getAllRecentChats = catchAsync(async (req, res, next) => {
+  let recentChats = await Chat.find({ users: req.user._id })
+    .populate({
+      path: "users",
+      select: "name pic",
+    })
+    .populate({
+      path: "latestMessage",
+      select: "content sender createdAt",
+      populate: { path: "sender", select: "name" },
+    });
+
+  recentChats = recentChats
+    .map((chat) => {
+      return {
+        user: chat.users.filter((user) => user._id !== req.user._id)[0],
+        latestMessage: {
+          content: chat.latestMessage?.content,
+          senderName:
+            chat.latestMessage?.sender.name === req.user.name
+              ? "You"
+              : chat.latestMessage?.sender.name,
+          time: chat.latestMessage?.createdAt,
+        },
+      };
+    })
+    .sort(
+      (a, b) =>
+        new Date(b.latestMessage.time).getTime() -
+        new Date(a.latestMessage.time).getTime()
+    );
+
+  res.status(200).json({
+    status: "success",
+    message: "Recent Chats",
+    result: recentChats.length,
+    data: { recentChats },
+  });
+});

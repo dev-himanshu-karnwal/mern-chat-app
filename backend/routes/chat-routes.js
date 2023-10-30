@@ -13,11 +13,7 @@ const router = express.Router();
 
 router.use(authController.protect);
 
-router
-  .route("/:id")
-  .get(chatController.getChat)
-  .delete(chatController.deleteChat);
-
-// TODO: get all chats+groups of a active user sorted by latestMesage
+router.get("/", chatController.getAllRecentChats);
+router.get("/:id", chatController.getChat);
 
 module.exports = router;
