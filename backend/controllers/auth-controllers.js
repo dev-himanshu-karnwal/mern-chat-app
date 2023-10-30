@@ -41,7 +41,7 @@ exports.login = catchAsync(async (req, res, next) => {
 
   const user = await User.findOne({ email });
 <<<<<<< HEAD
-=======
+
 
 >>>>>>> e1cf3298707120330ccc0ee6e2321fc1e3e3d641
   if (!user || !(await user.matchPassword(password))) {
