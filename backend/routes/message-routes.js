@@ -4,20 +4,21 @@ const authController = require(path.join(
   __dirname,
   "./../controllers/auth-controllers"
 ));
-const chatController = require(path.join(
+const messageController = require(path.join(
   __dirname,
-  "./../controllers/chat-controllers"
+  "./../controllers/message-controllers"
 ));
 
 const router = express.Router();
 
 router.use(authController.protect);
 
+router.post("/", messageController.createMessage);
 router
   .route("/:id")
-  .get(chatController.getChat)
-  .delete(chatController.deleteChat);
+  .delete(messageController.completelyDeleteMessage)
+  .patch(messageController.deleteMessage);
 
-// TODO: get all chats+groups of a active user sorted by latestMesage
+// TODO: get all messages of a particular chat or group
 
 module.exports = router;

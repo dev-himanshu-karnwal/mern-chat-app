@@ -49,16 +49,19 @@ exports.getGroupInfo = catchAsync(async (req, res, next) => {
 
   const group = await Group.findById(groupId)
     .populate({ path: "admin", select: "name email pic" })
-    .populate({ path: "members", select: "name email pic" });
+    .populate({ path: "members", select: "name email pic" })
+    .populate({
+      path: "latestMessage",
+      select: "content",
+      populate: { path: "sender", select: "name pic email" },
+    });
   if (!group) {
     return next(new AppError("Invalid group ID", 401));
   }
 
   if (
-    group.members.find(
-      (member) => member._id.toString() === req.user._id.toString()
-    ) ||
-    group.admin._id.toString() === req.user._id.toString()
+    group.members.find((member) => member._id.equals(req.user._id)) ||
+    group.admin._id.equals(req.user._id)
   )
     return res.status(200).json({
       status: "success",
@@ -89,7 +92,12 @@ exports.renameGroup = catchAsync(async (req, res, next) => {
     { new: true }
   )
     .populate({ path: "admin", select: "name pic email" })
-    .populate({ path: "members", select: "name pic email" });
+    .populate({ path: "members", select: "name pic email" })
+    .populate({
+      path: "latestMessage",
+      select: "content",
+      populate: { path: "sender", select: "name pic email" },
+    });
 
   if (!group) {
     return next(new AppError("Invalid group ID", 404));
@@ -133,7 +141,12 @@ exports.addMember = catchAsync(async (req, res, next) => {
     { new: true }
   )
     .populate({ path: "admin", select: "name pic email" })
-    .populate({ path: "members", select: "name pic email" });
+    .populate({ path: "members", select: "name pic email" })
+    .populate({
+      path: "latestMessage",
+      select: "content",
+      populate: { path: "sender", select: "name pic email" },
+    });
 
   if (!group) {
     return next(
@@ -178,7 +191,12 @@ exports.removeMember = catchAsync(async (req, res, next) => {
     { new: true }
   )
     .populate({ path: "admin", select: "name pic email" })
-    .populate({ path: "members", select: "name pic email" });
+    .populate({ path: "members", select: "name pic email" })
+    .populate({
+      path: "latestMessage",
+      select: "content",
+      populate: { path: "sender", select: "name pic email" },
+    });
 
   if (!group) {
     return next(
