@@ -42,9 +42,9 @@ const Login = () => {
   };
   return (
     <div className="bg-authbg bg-cover bg-center   bg-no-repeat min-h-screen flex flex-col ">
-      <div className="container bg-transparent max-w-lg mx-auto flex-1 flex flex-col items-center  px-2">
-        <div className="mt-[20vh] backdrop-opacity-70 px-6 py-8 rounded-lg shadow-2xl text-gray-300 w-full">
-          <h1 className="mb-8 text-3xl  font-extrabold text-center text-blue-800 uppercase">Log in</h1>
+      <div className="container  max-w-lg mx-auto flex-1 flex flex-col items-center  px-2">
+        <div className="mt-[20vh] bg-blue-500  px-6 py-8 rounded-lg shadow-2xl text-gray-300 w-full">
+          <h1 className="mb-8 text-3xl  font-extrabold text-center text-white uppercase">Log in</h1>
           <input
             type="text"
             className="block border border-grey-light w-full p-3 rounded mb-4"
