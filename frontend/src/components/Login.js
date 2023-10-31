@@ -4,7 +4,6 @@ import "react-toastify/dist/ReactToastify.css";
 import { UseDisplayError } from "../utils/helper";
 import { Link } from "react-router-dom";
 
-
 const Login = () => {
   const [logindetails, setlogindetails] = useState({
     email: "",
@@ -25,7 +24,7 @@ const Login = () => {
     console.log(logindetails);
     console.log(data);
     if (data.status === "success") {
-      console.log("done")
+      console.log("done");
       toast.success(data.message, {
         position: "top-center",
         autoClose: 5000,
@@ -43,11 +42,13 @@ const Login = () => {
   return (
     <div className="bg-authbg bg-cover bg-center   bg-no-repeat min-h-screen flex flex-col ">
       <div className="container  max-w-lg mx-auto flex-1 flex flex-col items-center  px-2">
-        <div className="mt-[20vh] bg-blue-500  px-6 py-8 rounded-lg shadow-2xl text-gray-300 w-full">
-          <h1 className="mb-8 text-3xl  font-extrabold text-center text-white uppercase">Log in</h1>
+        <div className="mt-[20vh] bg-blue-500 flex justify-center flex-col align-middle  px-6 py-8 rounded-lg shadow-2xl text-gray-300 w-3/4">
+          <h1 className="mb-8 text-3xl  font-extrabold text-center text-white uppercase">
+            sign in
+          </h1>
           <input
             type="text"
-            className="block border border-grey-light w-full p-3 rounded mb-4"
+            className="block border-2  w-full px-3 py-1 shadow-2xl rounded mb-2 focus:border-blue-800"
             name="email"
             placeholder="Email"
             onChange={(e) =>
@@ -59,7 +60,7 @@ const Login = () => {
           />
           <input
             type="password"
-            className="block border border-grey-light w-full p-3 rounded mb-4"
+            className="block border-2  w-full px-3 py-1 shadow-2xl rounded mb-2 focus:border-blue-800"
             name="password"
             placeholder="Password"
             onChange={(e) =>
@@ -71,7 +72,7 @@ const Login = () => {
           />
           <button
             type="submit"
-            className="w-full text-center py-3 uppercase text-xl bg-white font-bold rounded bg-green text-black  hover:bg-green-500 my-1"
+            class="text-white bg-blue-700  hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-1 mt-2 text-center mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 ml-1/2"
             onClick={handelloginsubmit}
           >
             submit

@@ -67,12 +67,11 @@ const Signup = () => {
   return (
     <div className="bg-authbg bg-cover bg-center  bg-no-repeat min-h-screen flex flex-col">
       <div className="container max-w-lg mx-auto flex-1 flex flex-col items-center justify-center px-2">
-
-        <div className=" bg-blue-500 px-6 py-8 rounded-lg shadow-2xl text-black w-full">
-          <h1 className="mb-8 text-3xl  font-extrabold text-center text-purple-700 uppercase">Sign up</h1>
+        <div className=" bg-blue-500 px-6 py-8 rounded-lg shadow-2xl text-black w-3/4">
+          <h1 className="mb-8 text-3xl  font-extrabold text-center text-white uppercase">Sign up</h1>
           <input
             type="text"
-            className="block border-2  w-full p-3 shadow-2xl rounded mb-2 focus:border-blue-800 "
+            className="block border-2  w-full px-3 py-1 shadow-2xl rounded mb-2 focus:border-blue-800"
 
             name="fullname"
             placeholder="Full Name"
@@ -86,7 +85,7 @@ const Signup = () => {
           <input
             type="text"
 
-            className="block border-2  w-full px-3 py-1 shadow-2xl rounded mb-2 focus:border-blue-800 "
+            className="block border-2  w-full px-3 py-1 shadow-2xl rounded mb-2 focus:border-blue-800"
             placeholder="Email"
             onChange={(e) =>
               setfinaldetails({
@@ -111,9 +110,7 @@ const Signup = () => {
           />
           <input
             type="password"
-
-            className="block border-2  w-full p-3 shadow-2xl rounded mb-2 focus:border-blue-800 "
-
+            className="block border-2  w-full px-3 py-1 shadow-2xl rounded mb-2 focus:border-blue-800"
             name="confirm_password"
             placeholder="Confirm Password"
             onChange={(e) =>
@@ -136,18 +133,18 @@ const Signup = () => {
               type="file"
             />
           </div>
-          <div className="flex gap-3 ">
+          <div className="flex justify-evenly mt-2 -mb-2 ">
             <button
               type="submit"
               onClick={handleCreateAccount}
-              class="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-1 mt-2 text-center mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+              class="text-white bg-blue-700  hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-1 mt-2 text-center mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
             >
               Create Account
             </button>
             <button
               type="reset"
               onClick={handelresetfield}
-              class="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-1 mt-2 text-center mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+              class="text-white bg-blue-700  hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-1 mt-2 text-center mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
             >
             Clear Form
             </button>
