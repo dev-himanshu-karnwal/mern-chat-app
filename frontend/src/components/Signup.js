@@ -67,13 +67,13 @@ const Signup = () => {
   return (
     <div className="bg-authbg bg-cover bg-center  bg-no-repeat min-h-screen flex flex-col">
       <div className="container max-w-lg mx-auto flex-1 flex flex-col items-center justify-center px-2">
-        <div className=" bg-blue-500 px-6 py-8 rounded-lg shadow-2xl text-black ">
-          <h1 className="mb-8 text-3xl  font-extrabold text-center text-white uppercase">
-            Sign up
-          </h1>
+
+        <div className=" bg-blue-500 px-6 py-8 rounded-lg shadow-2xl text-black w-full">
+          <h1 className="mb-8 text-3xl  font-extrabold text-center text-purple-700 uppercase">Sign up</h1>
           <input
             type="text"
-            className="block border-2  w-full px-3 py-1 shadow-2xl rounded mb-2 focus:border-blue-800 "
+            className="block border-2  w-full p-3 shadow-2xl rounded mb-2 focus:border-blue-800 "
+
             name="fullname"
             placeholder="Full Name"
             onChange={(e) =>
@@ -85,8 +85,8 @@ const Signup = () => {
           />
           <input
             type="text"
+
             className="block border-2  w-full px-3 py-1 shadow-2xl rounded mb-2 focus:border-blue-800 "
-            name="email"
             placeholder="Email"
             onChange={(e) =>
               setfinaldetails({
@@ -98,8 +98,9 @@ const Signup = () => {
 
           <input
             type="password"
+
             className="block border-2  w-full px-3 py-1 shadow-2xl rounded mb-2 focus:border-blue-800 "
-            name="password"
+
             placeholder="Password"
             onChange={(e) =>
               setfinaldetails({
@@ -110,7 +111,9 @@ const Signup = () => {
           />
           <input
             type="password"
-            className="block border-2  w-full px-3 py-1 shadow-2xl rounded mb-2 focus:border-blue-800"
+
+            className="block border-2  w-full p-3 shadow-2xl rounded mb-2 focus:border-blue-800 "
+
             name="confirm_password"
             placeholder="Confirm Password"
             onChange={(e) =>
@@ -149,6 +152,7 @@ const Signup = () => {
             Clear Form
             </button>
           </div>
+
         </div>
 
         <div className="text-grey-dark mt-6 text-red-50">

@@ -1,6 +1,7 @@
 const path = require("path");
 const User = require(path.join(__dirname, "./../models/user-model.js"));
 const Group = require(path.join(__dirname, "./../models/group-model.js"));
+const Message = require(path.join(__dirname, "./../models/message-model.js"));
 const catchAsync = require(path.join(__dirname, "./../utils/catch-async"));
 const AppError = require(path.join(__dirname, "./../utils/app-error"));
 
@@ -35,6 +36,7 @@ exports.createGroup = catchAsync(async (req, res, next) => {
 });
 
 exports.deleteGroup = catchAsync(async (req, res, next) => {
+  await Message.deleteMany({ group: req.params.id });
   await Group.findByIdAndDelete(req.params.id);
 
   res.status(204).json({
@@ -208,5 +210,46 @@ exports.removeMember = catchAsync(async (req, res, next) => {
     status: "success",
     message: "Members removed successfully",
     data: { updatedGroup: group },
+  });
+});
+
+exports.getAllRecentGroups = catchAsync(async (req, res, next) => {
+  let recentGroups = await Group.find({
+    $or: [{ admin: req.user._id }, { members: req.user._id }],
+  })
+    .select("name pic _id latestMessage")
+    .populate({
+      path: "latestMessage",
+      select: "content sender createdAt",
+      populate: { path: "sender", select: "name" },
+    });
+
+  recentGroups = recentGroups
+    .map((group) => {
+      return {
+        name: group.name,
+        pic: group.pic,
+        _id: group._id,
+        latestMessage: {
+          content: group.latestMessage?.content,
+          senderName:
+            group.latestMessage?.sender.name === req.user.name
+              ? "You"
+              : group.latestMessage?.sender.name,
+          time: group.latestMessage?.createdAt,
+        },
+      };
+    })
+    .sort(
+      (a, b) =>
+        new Date(b.latestMessage.time).getTime() -
+        new Date(a.latestMessage.time).getTime()
+    );
+
+  res.status(200).json({
+    status: "success",
+    message: "Recent Groups",
+    result: recentGroups.length,
+    data: { recentGroups },
   });
 });
