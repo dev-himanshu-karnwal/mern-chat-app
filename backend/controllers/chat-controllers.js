@@ -4,7 +4,7 @@ const catchAsync = require(path.join(__dirname, "./../utils/catch-async"));
 const AppError = require(path.join(__dirname, "./../utils/app-error"));
 
 exports.getChat = catchAsync(async (req, res, next) => {
-  const chat = await Chat.findById(req.params.id)
+  let chat = await Chat.findById(req.params.id)
     .populate({
       path: "latestMessage",
       select: "sender content reciever",
@@ -21,10 +21,22 @@ exports.getChat = catchAsync(async (req, res, next) => {
     return next(new AppError("Chat not found", 404));
   }
 
+  const userChat = {};
+  userChat.user = chat.users.filter((user) => user.email !== req.user.email)[0];
+  userChat._id = chat._id;
+  userChat.latestMessage = {
+    content: chat.latestMessage.content,
+    sender:
+      chat.latestMessage?.sender.email === req.user.email
+        ? "You"
+        : chat.latestMessage?.sender.name,
+    time: chat.latestMessage?.createdAt,
+  };
+
   return res.status(200).json({
     status: "success",
     message: "Chat found",
-    data: { chat },
+    data: { chat: userChat },
   });
 });
 
@@ -43,7 +55,7 @@ exports.getAllRecentChats = catchAsync(async (req, res, next) => {
   recentChats = recentChats
     .map((chat) => {
       return {
-        user: chat.users.filter((user) => user._id !== req.user._id)[0],
+        user: chat.users.filter((user) => !user.equals(req.user))[0],
         latestMessage: {
           content: chat.latestMessage?.content,
           senderName:
