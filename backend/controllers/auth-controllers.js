@@ -44,34 +44,45 @@ exports.login = catchAsync(async (req, res, next) => {
     return next(new AppError("Invalid login email or password.", 401));
   }
 
-  res.status(201).json({
-    status: "success",
-    message: "User Logged in successfully",
-    data: { user },
-    token: signToken(user._id),
-  });
+  res
+    .cookie("token", signToken(user._id), { httpOnly: true })
+    .status(201)
+    .json({
+      status: "success",
+      message: "User Logged in successfully",
+      data: { user },
+      token: signToken(user._id),
+    });
 });
 
 exports.protect = catchAsync(async (req, res, next) => {
   let token;
+
   if (
     req.headers.authorization &&
     req.headers.authorization.startsWith("Bearer")
   ) {
-    try {
-      token = req.headers.authorization.split(" ")[1];
-      const decoded = jwt.verify(token, process.env.JWT_SECRET);
-
-      const user = await User.findById(decoded.id).select("-password");
-      if (!user) return next(new AppError("you are not Logged in", 401));
-
-      req.user = user;
-    } catch (err) {
-      return next(new AppError("Login to continue.", 401));
-    }
+    token = req.headers.authorization.split(" ")[1];
+  } else if (req.cookies.token) {
+    token = req.cookies.token;
   }
-  if (!token)
-    next(new AppError("you are not logged in. Login to continue..", 401));
+
+  if (!token) {
+    return next(
+      new AppError("you are not logged in. Login to continue..", 401)
+    );
+  }
+
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    const user = await User.findById(decoded.id).select("-password");
+    if (!user) return next(new AppError("you are not Logged in", 401));
+
+    req.user = user;
+  } catch (err) {
+    return next(new AppError("Login to continue.", 401));
+  }
 
   next();
 });

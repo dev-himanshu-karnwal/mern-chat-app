@@ -1,6 +1,7 @@
 const path = require("path");
 const express = require("express");
 const morgan = require("morgan");
+const cookieParser = require("cookie-parser");
 
 const userRouter = require(path.join(__dirname, "./routes/user-routes.js"));
 const groupRouter = require(path.join(__dirname, "./routes/group-routes.js"));
@@ -19,6 +20,7 @@ const app = express();
 
 app.use(express.json());
 app.use(morgan("dev"));
+app.use(cookieParser());
 
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/chats", chatRouter);
