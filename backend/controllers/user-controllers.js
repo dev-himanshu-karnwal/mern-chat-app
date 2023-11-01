@@ -17,7 +17,7 @@ exports.searchUser = catchAsync(async (req, res, next) => {
 
   const users = await User.find(keyword)
     .find({ _id: { $ne: req.user._id } })
-    .select("-password -isAdmin -role");
+    .select("-password -createdAt -updatedAt -__v");
 
   res.status(200).json({
     status: "success",
