@@ -210,3 +210,78 @@ exports.deleteMessage = catchAsync(async (req, res, next) => {
     data: null,
   });
 });
+
+exports.getChatMessages = catchAsync(async (req, res, next) => {
+  const userId = req.params.id;
+
+  if (userId === req.user._id.toString()) {
+    return next(new AppError("No one has sent messages to self", 400));
+  }
+
+  let messages = await Message.find({
+    $or: [
+      { reciever: userId, sender: req.user._id },
+      { sender: userId, reciever: req.user._id },
+    ],
+  })
+    .select("-isGroupMessage -deletedFor -updatedAt -__v")
+    .sort("-createdAt");
+
+  messages = messages.map((msg) => {
+    return {
+      _id: msg._id,
+      content: msg.content,
+      sender: msg.sender.toString() === userId ? "user" : "you",
+      time: msg.createdAt,
+    };
+  });
+
+  res.json({
+    status: "success",
+    message: "Chat Messages",
+    result: messages.length,
+    messages,
+  });
+});
+
+exports.getGroupMessages = catchAsync(async (req, res, next) => {
+  const groupId = req.params.id;
+
+  const group = await Group.findById(groupId);
+  if (!group) {
+    return next(new AppError("Invalid group ID", 401));
+  }
+
+  if (
+    !group.members.find((member) => member === req.user._id.toString()) &&
+    !group.admin === req.user._id.toString()
+  ) {
+    return next(
+      new AppError(
+        "Only a Group admin or member has access to group information",
+        401
+      )
+    );
+  }
+
+  let messages = await Message.find({ group: groupId })
+    .select("-isGroupMessage -deletedFor -updatedAt -__v")
+    .populate({ path: "sender", select: "name pic _id" })
+    .sort("-createdAt");
+
+  messages = messages.map((msg) => {
+    return {
+      _id: msg._id,
+      content: msg.content,
+      sender: msg.sender,
+      time: msg.createdAt,
+    };
+  });
+
+  res.json({
+    status: "success",
+    message: "Group Messages",
+    result: messages.length,
+    messages,
+  });
+});
