@@ -1,10 +1,12 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { UseDisplayError } from "../utils/helper";
 import { ToastContainer, toast } from "react-toastify";
+// import { useNavigate } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
 
 const Signup = () => {
+  const Navigate=useNavigate();
   const [finaldetails, setfinaldetails] = useState({
     name: "",
     email: "",
@@ -25,7 +27,7 @@ const Signup = () => {
     });
     toast("🦄 Reset Successful", {
       position: "top-center",
-      autoClose: 5000,
+      autoClose: 2000,
       hideProgressBar: false,
       closeOnClick: true,
       pauseOnHover: true,
@@ -60,6 +62,11 @@ const Signup = () => {
         progress: undefined,
         theme: "light",
       });
+
+      setTimeout(() => {
+        Navigate("/chatpage");
+      }, 2000);
+
     } else {
       UseDisplayError(data);
     }
@@ -68,11 +75,12 @@ const Signup = () => {
     <div className="bg-authbg bg-cover bg-center  bg-no-repeat min-h-screen flex flex-col">
       <div className="container max-w-lg mx-auto flex-1 flex flex-col items-center justify-center px-2">
         <div className=" bg-blue-500 px-6 py-8 rounded-lg shadow-2xl text-black w-3/4">
-          <h1 className="mb-8 text-3xl  font-extrabold text-center text-white uppercase">Sign up</h1>
+          <h1 className="mb-8 text-3xl  font-extrabold text-center text-white uppercase">
+            Sign up
+          </h1>
           <input
             type="text"
             className="block border-2  w-full px-3 py-1 shadow-2xl rounded mb-2 focus:border-blue-800"
-
             name="fullname"
             placeholder="Full Name"
             onChange={(e) =>
@@ -84,7 +92,6 @@ const Signup = () => {
           />
           <input
             type="text"
-
             className="block border-2  w-full px-3 py-1 shadow-2xl rounded mb-2 focus:border-blue-800"
             placeholder="Email"
             onChange={(e) =>
@@ -97,9 +104,7 @@ const Signup = () => {
 
           <input
             type="password"
-
             className="block border-2  w-full px-3 py-1 shadow-2xl rounded mb-2 focus:border-blue-800 "
-
             placeholder="Password"
             onChange={(e) =>
               setfinaldetails({
@@ -120,17 +125,15 @@ const Signup = () => {
               })
             }
           />
-          <div>
-            <label
-              class="block mb-2 my-2 text-sm font-medium text-gray-900 dark:text-white"
-              for="file_input"
-            >
-              Upload Profile Pic
+          
+          <div className="grid w-full max-w-xs items-center gap-1.5">
+            <label className="text-sm text-blue-100 font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+            Upload Profile Pic
             </label>
             <input
-              class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
-              id="file_input"
+              id="picture"
               type="file"
+              class="flex h-10 w-full rounded-md border border-input bg-white px-3 py-2 text-sm text-gray-400 file:border-0 file:bg-transparent file:text-gray-600 file:text-sm file:font-medium"
             />
           </div>
           <div className="flex justify-evenly mt-2 -mb-2 ">
@@ -146,10 +149,9 @@ const Signup = () => {
               onClick={handelresetfield}
               class="text-white bg-blue-700  hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-1 mt-2 text-center mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
             >
-            Clear Form
+              Clear Form
             </button>
           </div>
-
         </div>
 
         <div className="text-grey-dark mt-6 text-red-50">
