@@ -253,3 +253,26 @@ exports.getAllRecentGroups = catchAsync(async (req, res, next) => {
     data: { recentGroups },
   });
 });
+
+exports.searchGroup = catchAsync(async (req, res, next) => {
+  const searchTerm = req.query.search;
+  const findQuery = searchTerm
+    ? { name: { $regex: searchTerm, $options: "i" } }
+    : {};
+  findQuery.$or = [{ members: req.user._id }, { admin: req.user._id }];
+
+  const groups = await Group.find(findQuery)
+    .select("-createdAt -updatedAt -__v -members -admin")
+    .populate({
+      path: "latestMessage",
+      select: "content sender createdAt -_id",
+      populate: { path: "sender", select: "name pic -_id" },
+    });
+
+  res.status(200).json({
+    status: "success",
+    message: "Search Group Results",
+    result: groups.length,
+    data: { groups },
+  });
+});
