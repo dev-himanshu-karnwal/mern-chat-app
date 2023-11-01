@@ -15,8 +15,10 @@ router.use(authController.protect);
 
 router
   .route("/")
-  .get(groupController.getAllRecentGroups)
+  .get(groupController.searchGroup)
   .post(groupController.createGroup);
+
+router.get("/recent", groupController.getAllRecentGroups);
 
 router
   .route("/:id")
