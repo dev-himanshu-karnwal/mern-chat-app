@@ -4,7 +4,9 @@ const catchAsync = require(path.join(__dirname, "./../utils/catch-async"));
 const AppError = require(path.join(__dirname, "./../utils/app-error"));
 
 exports.getChat = catchAsync(async (req, res, next) => {
-  let chat = await Chat.findById(req.params.id)
+  let chat = await Chat.findOne({
+    users: { $all: [req.user._id, req.params.id] },
+  })
     .populate({
       path: "latestMessage",
       select: "sender content reciever",
