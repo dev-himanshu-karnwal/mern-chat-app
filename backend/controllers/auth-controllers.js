@@ -1,5 +1,6 @@
 const path = require("path");
 const jwt = require("jsonwebtoken");
+const { promisify } = require("util");
 const User = require(path.join(__dirname, "./../models/user-model.js"));
 const Group = require(path.join(__dirname, "./../models/group-model.js"));
 const catchAsync = require(path.join(__dirname, "./../utils/catch-async"));
@@ -77,7 +78,7 @@ exports.protect = catchAsync(async (req, res, next) => {
   }
 
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
 
     const user = await User.findById(decoded.id).select("-password");
     if (!user) return next(askToLoginError);
