@@ -4,7 +4,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { UseDisplayError } from "../utils/helper";
 import { Link, useNavigate  } from "react-router-dom";
 import {useDispatch} from "react-redux" 
-import {adduser} from "../utils/Userslice"
+import {adduser, toggelislogedin, usertoken} from "../utils/Userslice"
 
 const Login = () => {
   const Navigate  = useNavigate (); 
@@ -43,10 +43,13 @@ const Login = () => {
       });
       
       dispatch(adduser(Data.data.user))
+      dispatch(toggelislogedin())
+      dispatch( usertoken(Data.token))
+      
       // Navigate to the "/" route after successful sihnup
 
       setTimeout(() => {
-        Navigate("/chatpage");
+        Navigate("/");
       }, 3000);
 
     } else {

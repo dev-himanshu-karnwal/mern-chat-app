@@ -7,7 +7,8 @@ const Chatheader = ({ user }) => {
   console.log(name, pic, email, _id);
 
   return (
-    <div className="w-full bg-purple-900 shadow-inner overflow-y-hidden h-24 shadow-purple-950 p-5 flex justify-evenly ">
+    <div className="w-full bg-purple-900 shadow-inner overflow-y-hidden h-20 mt-2 shadow-purple-950 p-2
+    flex justify-evenly ">
       <div>
         <img
           alt="seeting"
@@ -28,7 +29,7 @@ const Chatheader = ({ user }) => {
           src={pic}
           className="rounded-full h-12 w-12 mx-auto bg-white cursor-pointer p-2"
         />
-        <h1 >Logined with {email}</h1>
+        <h1 className="font-bold text-lg">{name}</h1>
       </div>
     </div>
   );
