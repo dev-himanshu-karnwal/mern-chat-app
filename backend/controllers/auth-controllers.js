@@ -6,7 +6,7 @@ const catchAsync = require(path.join(__dirname, "./../utils/catch-async"));
 const AppError = require(path.join(__dirname, "./../utils/app-error"));
 
 const signToken = (id) =>
-  jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: "30d" });
+  jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: "30 days" });
 
 exports.signUp = catchAsync(async (req, res, next) => {
   const { name, email, password, confirmPassword, pic } = req.body;
@@ -56,6 +56,11 @@ exports.login = catchAsync(async (req, res, next) => {
 });
 
 exports.protect = catchAsync(async (req, res, next) => {
+  const askToLoginError = new AppError(
+    "you are not logged in. Login to continue..",
+    401
+  );
+
   let token;
 
   if (
@@ -68,20 +73,18 @@ exports.protect = catchAsync(async (req, res, next) => {
   }
 
   if (!token) {
-    return next(
-      new AppError("you are not logged in. Login to continue..", 401)
-    );
+    return next(askToLoginError);
   }
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
     const user = await User.findById(decoded.id).select("-password");
-    if (!user) return next(new AppError("you are not Logged in", 401));
+    if (!user) return next(askToLoginError);
 
     req.user = user;
   } catch (err) {
-    return next(new AppError("Login to continue.", 401));
+    return next(askToLoginError);
   }
 
   next();
