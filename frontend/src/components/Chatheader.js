@@ -1,7 +1,7 @@
 import React from "react";
 
 const Chatheader = ({ user }) => {
-  // Destructure user object to obtain name, email, pic, and _id
+
   const { name, email, pic, _id } = user;
 
   console.log(name, pic, email, _id);

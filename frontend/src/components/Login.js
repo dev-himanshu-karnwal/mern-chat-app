@@ -2,12 +2,12 @@ import React, { useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { UseDisplayError } from "../utils/helper";
-import { Link, useNavigate  } from "react-router-dom";
-import {useDispatch} from "react-redux" 
-import {adduser, toggelislogedin, usertoken} from "../utils/Userslice"
+import { Link, useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { adduser, toggelislogedin, usertoken } from "../utils/Userslice";
 
 const Login = () => {
-  const Navigate  = useNavigate (); 
+  const Navigate = useNavigate();
   const dispatch = useDispatch();
 
   const [logindetails, setlogindetails] = useState({
@@ -25,10 +25,10 @@ const Login = () => {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(logindetails), 
+      body: JSON.stringify(logindetails),
     });
     const Data = await res.json();
-    console.log(Data);  
+    console.log(Data);
     if (Data.status === "success") {
       console.log("done");
       toast.success(Data.message, {
@@ -41,23 +41,21 @@ const Login = () => {
         progress: undefined,
         theme: "dark",
       });
-      
-      dispatch(adduser(Data.data.user))
-      dispatch(toggelislogedin())
-      dispatch( usertoken(Data.token))
-      
+
+      dispatch(adduser(Data.data.user));
+      dispatch(toggelislogedin());
+      dispatch(usertoken(Data.token));
+
       // Navigate to the "/" route after successful sihnup
 
       setTimeout(() => {
         Navigate("/");
-      }, 3000);
-
+      }, 2000);
     } else {
       UseDisplayError(Data);
     }
   };
 
-  
   return (
     <div className="bg-authbg bg-cover bg-center  text-black bg-no-repeat min-h-screen flex flex-col ">
       <div className="container  max-w-lg mx-auto flex-1 flex flex-col items-center  px-2">
@@ -96,7 +94,6 @@ const Login = () => {
           >
             submit
           </button>
-
         </div>
         <div className="mt-6 text-white">
           Don't have an account?
@@ -112,6 +109,6 @@ const Login = () => {
       <ToastContainer />
     </div>
   );
-}
+};
 
- export default Login;
+export default Login;
