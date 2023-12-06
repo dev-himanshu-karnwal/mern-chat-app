@@ -45,7 +45,7 @@ const Searchbar = () => {
       <input
         type="button"
         value="Search"
-        className="bg-blue-500 p-2 rounded-tr-lg rounded-br-lg text-white font-semibold hover:bg-blue-800 transition-colors"
+        className="bg-blue-500 p-2 rounded-tr-lg rounded-br-lg text-white font-semibold hover:cursor-pointer hover:bg-blue-800 transition-colors"
         onClick={handleSearch}
       />
       {showSuggestions ? (

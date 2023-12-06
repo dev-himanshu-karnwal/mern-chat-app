@@ -1,20 +1,34 @@
 import React from "react";
+import { getcurrrentUserOneToOneId } from "../utils/Userslice";
+import { useDispatch } from "react-redux";
 
 const ChatCard = ({ item }) => {
-  // console.log(item);
+  const dispatch = useDispatch();
   const date = new Date(item.latestMessage.time);
   const formattedTime = date.toLocaleTimeString();
+  console.log(item);
+  const handleChatCardClick = () => {
+    // Handle the click event here
+    console.log("Clicked on ChatCard:"  );
+    dispatch(getcurrrentUserOneToOneId(item.user._id));
+    
+    // You can make an API request or navigate to a specific chat page, etc.
+  };
+
   return (
-    <div className="rounded-md  mt-3 flex bg-white">
+    <div
+      className="rounded-md mt-3 flex bg-white hover:cursor-pointer"
+      onClick={handleChatCardClick}
+    >
       <div>
         <img
           alt="user"
           src={item.user.pic}
-          className="rounded-full h-12  bg-white cursor-pointer p-2"
+          className="rounded-full h-12 bg-white cursor-pointer p-2"
         />
       </div>
-      <div className="ml-4 mb-2  w-full">
-        <div className=" flex flex-col ">
+      <div className="ml-4 mb-2 w-full">
+        <div className="flex flex-col">
           <div className="font-bold text-xl">{item.user.name}</div>
           <div className="flex justify-between">
             {item.latestMessage.content ? (
@@ -24,13 +38,16 @@ const ChatCard = ({ item }) => {
             ) : (
               ""
             )}
-           {
-            (formattedTime==='Invalid Date')?" ":<div className="mr-3">{formattedTime}</div>
-           }
+            {formattedTime === "Invalid Date" ? (
+              ""
+            ) : (
+              <div className="mr-3">{formattedTime}</div>
+            )}
           </div>
         </div>
       </div>
     </div>
   );
 };
+
 export default ChatCard;

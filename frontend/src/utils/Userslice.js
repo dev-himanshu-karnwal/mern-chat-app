@@ -5,21 +5,36 @@ const Userslice = createSlice({
   initialState: {
     currrentuser: {},
     toggelislogedin: false,
-    usertoken:""
-
+    usertoken: "",
+    currrentUserOneToOneId: "",
   },
   reducers: {
     adduser: (state, action) => {
       state.currrentuser = { ...action.payload };
     },
-    toggelislogedin:(state)=>{
-      state.toggelislogedin= !(state.toggelislogedin)
+    toggelislogedin: (state) => {
+      state.toggelislogedin = !state.toggelislogedin;
     },
-    usertoken :(state,action)=>{
-      state.usertoken= action.payload
-    }
+    usertoken: (state, action) => {
+      state.usertoken = action.payload;
+    },
+    getcurrrentUserOneToOneId: (state, action) => {
+      state.currrentUserOneToOneId = action.payload;
+    },
+    logoutcurrentuser: (state) => {
+      state.currrentuser = {};
+      state.toggelislogedin = false;
+      state.usertoken = "";
+      state.currrentUserOneToOneId = "";
+    },
   },
 });
 
-export const { adduser,toggelislogedin,usertoken } = Userslice.actions;
+export const {
+  adduser,
+  toggelislogedin,
+  usertoken,
+  getcurrrentUserOneToOneId,
+  logoutcurrentuser,
+} = Userslice.actions;
 export default Userslice.reducer;
