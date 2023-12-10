@@ -4,6 +4,7 @@ import { useDispatch } from "react-redux";
 import { logoutcurrentuser} from "../utils/Userslice";
 
 const Chatheader = ({ user }) => {
+  
   const { name, pic } = user;
   const Navigate=useNavigate();
   const dispatch = useDispatch()

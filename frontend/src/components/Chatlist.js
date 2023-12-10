@@ -22,6 +22,7 @@ const Chatlist = () => {
         },
       });
       const data = await res.json();
+      console.log(token,data)
       if (data.message === "you are not logged in. Login to continue..") {
         navigate("/login");
       } else {

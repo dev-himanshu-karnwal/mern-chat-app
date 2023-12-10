@@ -7,6 +7,7 @@ const Userslice = createSlice({
     toggelislogedin: false,
     usertoken: "",
     currrentUserOneToOneId: "",
+    currentChatMesssages:{},
   },
   reducers: {
     adduser: (state, action) => {
@@ -27,6 +28,9 @@ const Userslice = createSlice({
       state.usertoken = "";
       state.currrentUserOneToOneId = "";
     },
+    setCurrentChatMesssages:(state,action)=>{
+      state.currentChatMesssages={... state.currentChatMesssages,...action.payload}
+    }
   },
 });
 
@@ -36,5 +40,6 @@ export const {
   usertoken,
   getcurrrentUserOneToOneId,
   logoutcurrentuser,
+  setCurrentChatMesssages,
 } = Userslice.actions;
 export default Userslice.reducer;

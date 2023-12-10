@@ -1,11 +1,19 @@
-import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import React, { useEffect, useState, useRef } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { setCurrentChatMesssages } from "../utils/Userslice";
+import ChatInputContainer from "./ChatInputContainer";
+import ChatMessageContextMenu from "./ChatMessageContextMenu";
 
 const PersonalChatContainer = () => {
   const id = useSelector((store) => store.User.currrentUserOneToOneId);
+  const dispatch = useDispatch();
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [newMessage, setNewMessage] = useState("");
+  const [contextMenu, setContextMenu] = useState({
+    visible: false,
+    messageId: null,
+  });
+  const contextMenuRef = useRef(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -19,6 +27,7 @@ const PersonalChatContainer = () => {
         });
         const data = await response.json();
         setMessages(data.messages);
+        dispatch(setCurrentChatMesssages(data.messages));
       } catch (error) {
         console.error("Error fetching data:", error);
       } finally {
@@ -31,32 +40,66 @@ const PersonalChatContainer = () => {
     }
   }, [id]);
 
-  const handleSendMessage = async () => {
-    if (!newMessage.trim()) {
-      // Don't send empty messages
-      return;
-    }
+  const handleContextMenu = (messageId) => (event) => {
+    event.preventDefault();
+    setContextMenu({ visible: true, messageId });
+  };
+
+  const handleContextMenuClose = () => {
+    setContextMenu({ visible: false, messageId: null });
+  };
+
+  const handlePermanentlyDelete = () => {
+    console.log("Permanently delete message with ID:", contextMenu.messageId);
+    // Add logic for permanently deleting the message
+    handleContextMenuClose();
+  };
+
+  const handlePersonallyDelete = async () => {
+    console.log("Personally delete message with ID:", contextMenu.messageId);
 
     try {
-      // Send the new message to the server
-      const response = await fetch(`api/v1/messages/user/${id}`, {
-        method: "POST",
+      const response = await fetch(`api/v1/messages/${contextMenu.messageId}`, {
+        method: "PATCH",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ content: newMessage }),
       });
 
-      // Assuming the server responds with the updated messages
-      const data = await response.json();
-      setMessages(data.messages || []);
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
 
-      // Clear the input field after sending the message
-      setNewMessage("");
+      const data = await response.json();
+      console.log(data);
+
+      setMessages((prevMessages) =>
+        prevMessages.filter((message) => message._id !== contextMenu.messageId)
+      );
+
+      handleContextMenuClose();
     } catch (error) {
-      console.error("Error sending message:", error);
+      console.error("Error deleting message:", error);
     }
   };
+
+  const handleClickOutsideContextMenu = (event) => {
+    if (
+      contextMenuRef.current &&
+      !contextMenuRef.current.contains(event.target)
+    ) {
+      handleContextMenuClose();
+    }
+  };
+  useEffect(() => {
+    console.log("Entering useEffect");
+    document.addEventListener("click", handleClickOutsideContextMenu);
+
+    return () => {
+      console.log("Removing event listener");
+      document.removeEventListener("click", handleClickOutsideContextMenu);
+    };
+  }, []);
 
   return (
     <div className="w-2/3 bg-purple-700 dark:bg-gray-800 text-white dark:text-white p-3 overflow-y-hidden flex flex-col border border-purple-900 rounded-md">
@@ -72,89 +115,38 @@ const PersonalChatContainer = () => {
                 key={message._id}
                 className={`mb-4 ${
                   message.sender === "you" ? "text-right" : "text-left"
-                }`}
+                } relative`}
+                onContextMenu={handleContextMenu(message._id)}
               >
                 <p
-                  className={`p-3 rounded-lg inline-block ${
+                  className={`p-3 rounded-lg inline-block  ${
                     message.sender === "you"
                       ? "bg-pink-500 text-white"
                       : "bg-purple-300 text-purple-800"
-                  }`}
+                  } `}
                 >
                   {message.content}
                 </p>
                 <p className="text-xs text-white mt-1">
                   {new Date(message.time).toLocaleString()}
                 </p>
+                {contextMenu.visible &&
+                  contextMenu.messageId === message._id && (
+                    <div ref={contextMenuRef}>
+                      <ChatMessageContextMenu
+                        messageSender={message.sender}
+                        onPermanentlyDelete={handlePermanentlyDelete}
+                        onPersonallyDelete={handlePersonallyDelete}
+                      />
+                    </div>
+                  )}
               </div>
             ))}
         </div>
       )}
-      <div className="mt-4 flex">
-        <textarea
-          className="flex-1 p-2 border rounded mr-2 bg-purple-300 text-purple-800 dark:bg-gray-700 dark:text-gray-300"
-          placeholder="Type your message..."
-          value={newMessage}
-          onChange={(e) => setNewMessage(e.target.value)}
-        />
-        <button
-          className="bg-pink-500 text-white p-2 rounded"
-          onClick={handleSendMessage}
-        >
-          Send
-        </button>
-      </div>
+      <ChatInputContainer />
     </div>
   );
-   return (
-    <div className="w-2/3 bg-purple-700 dark:bg-gray-800 text-white dark:text-white p-3 overflow-y-hidden flex flex-col">
-      {loading ? (
-        <p>Loading...</p>
-      ) : (
-        <div className="flex-1">
-          {messages
-            .slice()
-            .reverse()
-            .map((message) => (
-              <div
-                key={message._id}
-                className={`mb-4 ${
-                  message.sender === "you" ? "text-right" : "text-left"
-                }`}
-              >
-                <p
-                  className={`p-3 rounded-lg inline-block ${
-                    message.sender === "you"
-                      ? "bg-pink-500 text-white"
-                      : "bg-purple-300 text-purple-800"
-                  }`}
-                >
-                  {message.content}
-                </p>
-                <p className="text-xs text-white mt-1">
-                  {new Date(message.time).toLocaleString()}
-                </p>
-              </div>
-            ))}
-        </div>
-      )}
-      <div className="mt-4 flex">
-        <textarea
-          className="flex-1 p-2 border rounded mr-2 bg-purple-300 text-purple-800 dark:bg-gray-700 dark:text-gray-300"
-          placeholder="Type your message..."
-          value={newMessage}
-          onChange={(e) => setNewMessage(e.target.value)}
-        />
-        <button
-          className="bg-pink-500 text-white p-2 rounded"
-          onClick={handleSendMessage}
-        >
-          Send
-        </button>
-      </div>
-    </div>
-  );
-  
 };
 
 export default PersonalChatContainer;
