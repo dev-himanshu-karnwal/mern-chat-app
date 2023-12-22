@@ -30,7 +30,9 @@ exports.signUp = catchAsync(async (req, res, next) => {
   const newUser = await User.create({ name, email, password, pic });
 
   res
-    .cookie("token", signToken(newUser._id), {maxAge: 1000*60*60*24*30})
+    .cookie("token", signToken(newUser._id), {
+      maxAge: 1000 * 60 * 60 * 24 * 30,
+    })
     .status(201)
     .json({
       status: "success",
@@ -49,7 +51,7 @@ exports.login = catchAsync(async (req, res, next) => {
   }
 
   res
-    .cookie("token", signToken(user._id), {maxAge: 1000*60*60*24*30})
+    .cookie("token", signToken(user._id), { maxAge: 1000 * 60 * 60 * 24 * 30 })
     .status(201)
     .json({
       status: "success",
@@ -57,6 +59,13 @@ exports.login = catchAsync(async (req, res, next) => {
       data: { user },
       token: signToken(user._id),
     });
+});
+
+exports.logout = catchAsync(async (req, res, next) => {
+  res.status(202).clearCookie("token").json({
+    status: "success",
+    message: "User Logout successfully",
+  });
 });
 
 exports.protect = catchAsync(async (req, res, next) => {
