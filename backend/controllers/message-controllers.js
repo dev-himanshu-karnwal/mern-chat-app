@@ -95,7 +95,9 @@ exports.createMessage = catchAsync(async (req, res, next) => {
 exports.completelyDeleteMessage = catchAsync(async (req, res, next) => {
   let msg;
   try {
-    msg = await Message.findByIdAndDelete(req.params.id);
+    msg = await Message.findById(req.params.id);
+    if (!msg) throw new Error();
+
     if (!msg.sender.equals(req.user._id))
       return next(
         new AppError(
@@ -106,6 +108,8 @@ exports.completelyDeleteMessage = catchAsync(async (req, res, next) => {
   } catch (err) {
     return next(new AppError(`Invalid Message ID "${req.params.id}"`, 400));
   }
+
+  await Message.findOneAndDelete(msg);
 
   if (msg.isGroupMessage) {
     const group = await Group.findById(msg.group);
