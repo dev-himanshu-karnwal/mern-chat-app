@@ -49,10 +49,33 @@ const PersonalChatContainer = () => {
     setContextMenu({ visible: false, messageId: null });
   };
 
-  const handlePermanentlyDelete = () => {
+  const handlePermanentlyDelete = async () => {
     console.log("Permanently delete message with ID:", contextMenu.messageId);
     // Add logic for permanently deleting the message
-    handleContextMenuClose();
+    try {
+      const response = await fetch(`api/v1/messages/${contextMenu.messageId}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      console.log(data);
+
+      setMessages((prevMessages) =>
+        prevMessages.filter((message) => message._id !== contextMenu.messageId)
+      );
+
+      handleContextMenuClose();
+    } catch (error) {
+      console.error("Error deleting message:", error);
+    }
+
   };
 
   const handlePersonallyDelete = async () => {
