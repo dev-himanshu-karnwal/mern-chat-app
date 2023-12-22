@@ -4,9 +4,13 @@ import { UseDisplayError } from "../utils/helper";
 import { ToastContainer, toast } from "react-toastify";
 // import { useNavigate } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
+import { useDispatch } from "react-redux";
+import { adduser, toggelislogedin, usertoken } from "../utils/Userslice";
 
 const Signup = () => {
   const Navigate=useNavigate();
+  const dispatch = useDispatch();
+
   const [finaldetails, setfinaldetails] = useState({
     name: "",
     email: "",
@@ -54,7 +58,7 @@ const Signup = () => {
     if (data.status === "success") {
       toast.success(data.message, {
         position: "top-center",
-        autoClose: 5000,
+        autoClose: 1000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -62,10 +66,13 @@ const Signup = () => {
         progress: undefined,
         theme: "light",
       });
+      dispatch(adduser(data.data.user));
+      dispatch(toggelislogedin());
+      dispatch(usertoken(data.token));
 
       setTimeout(() => {
-        Navigate("/chatpage");
-      }, 2000);
+        Navigate("/");
+      }, 1500);
 
     } else {
       UseDisplayError(data);
@@ -133,21 +140,21 @@ const Signup = () => {
             <input
               id="picture"
               type="file"
-              class="flex h-10 w-full rounded-md border border-input bg-white px-3 py-2 text-sm text-gray-400 file:border-0 file:bg-transparent file:text-gray-600 file:text-sm file:font-medium"
+              className="flex h-10 w-full rounded-md border border-input bg-white px-3 py-2 text-sm text-gray-400 file:border-0 file:bg-transparent file:text-gray-600 file:text-sm file:font-medium"
             />
           </div>
           <div className="flex justify-evenly mt-2 -mb-2 ">
             <button
               type="submit"
               onClick={handleCreateAccount}
-              class="text-white bg-blue-700  hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-1 mt-2 text-center mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+              className="text-white bg-blue-700  hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-1 mt-2 text-center mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
             >
               Create Account
             </button>
             <button
               type="reset"
               onClick={handelresetfield}
-              class="text-white bg-blue-700  hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-1 mt-2 text-center mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+              className="text-white bg-blue-700  hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-1 mt-2 text-center mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
             >
               Clear Form
             </button>

@@ -1,16 +1,50 @@
 import React from "react";
+import { getcurrrentUserOneToOneId } from "../utils/Userslice";
+import { useDispatch } from "react-redux";
 
-const ChatCard = () => {
+const ChatCard = ({ item }) => {
+  const dispatch = useDispatch();
+  const date = new Date(item.latestMessage.time);
+  const formattedTime = date.toLocaleTimeString();
+  console.log(item);
+  const handleChatCardClick = () => {
+    // Handle the click event here
+    console.log("Clicked on ChatCard:"  );
+    dispatch(getcurrrentUserOneToOneId(item.user._id));
+    
+    // You can make an API request or navigate to a specific chat page, etc.
+  };
+
   return (
-    <div className="rounded-md  mt-3 flex bg-white">
-      <img
-        alt="user"
-        src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT2yJWVwI9ZFnJhI3FIB5wIK4Ys7B8J-u5hfQ&usqp=CAU"
-        className="rounded-full h-12  bg-white cursor-pointer p-2"
-      />
-      <div className="ml-4 mb-2">
-        <div className="font-bold text-xl">Harsh Yadav</div>
-        <div className="font-semibold text-sm">last message</div>
+    <div
+      className="rounded-md mt-3 flex bg-white hover:cursor-pointer"
+      onClick={handleChatCardClick}
+    >
+      <div>
+        <img
+          alt="user"
+          src={item.user.pic}
+          className="rounded-full h-12 bg-white cursor-pointer p-2"
+        />
+      </div>
+      <div className="ml-4 mb-2 w-full">
+        <div className="flex flex-col">
+          <div className="font-bold text-xl">{item.user.name}</div>
+          <div className="flex justify-between">
+            {item.latestMessage.content ? (
+              <div className="font-semibold text-sm">
+                {item.latestMessage.content}
+              </div>
+            ) : (
+              ""
+            )}
+            {formattedTime === "Invalid Date" ? (
+              ""
+            ) : (
+              <div className="mr-3">{formattedTime}</div>
+            )}
+          </div>
+        </div>
       </div>
     </div>
   );

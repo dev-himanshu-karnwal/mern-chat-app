@@ -22,9 +22,8 @@ export const  appRouter = createBrowserRouter([
     element: <App/>,
     children: [
       {
-        path: "/Chatpage",
+        path: "/",
         element: <Chatpage />,
-
       },
       {
         path: "/signup",

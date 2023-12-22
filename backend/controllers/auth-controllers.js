@@ -29,12 +29,15 @@ exports.signUp = catchAsync(async (req, res, next) => {
 
   const newUser = await User.create({ name, email, password, pic });
 
-  res.status(201).json({
-    status: "success",
-    message: "User Created Successfully",
-    data: { user: newUser },
-    token: signToken(newUser._id),
-  });
+  res
+    .cookie("token", signToken(newUser._id), {maxAge: 1000*60*60*24*30})
+    .status(201)
+    .json({
+      status: "success",
+      message: "User Created Successfully",
+      data: { user: newUser },
+      token: signToken(newUser._id),
+    });
 });
 
 exports.login = catchAsync(async (req, res, next) => {
@@ -46,7 +49,7 @@ exports.login = catchAsync(async (req, res, next) => {
   }
 
   res
-    .cookie("token", signToken(user._id), { httpOnly: true })
+    .cookie("token", signToken(user._id), {maxAge: 1000*60*60*24*30})
     .status(201)
     .json({
       status: "success",
@@ -69,7 +72,8 @@ exports.protect = catchAsync(async (req, res, next) => {
     req.headers.authorization.startsWith("Bearer")
   ) {
     token = req.headers.authorization.split(" ")[1];
-  } else if (req.cookies.token) {
+  }
+  if (req.cookies.token) {
     token = req.cookies.token;
   }
 

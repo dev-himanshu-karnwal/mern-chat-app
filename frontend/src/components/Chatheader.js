@@ -1,34 +1,53 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { logoutcurrentuser} from "../utils/Userslice";
 
 const Chatheader = ({ user }) => {
-  // Destructure user object to obtain name, email, pic, and _id
-  const { name, email, pic, _id } = user;
+  
+  const { name, pic } = user;
+  const Navigate=useNavigate();
+  const dispatch = useDispatch()
 
-  console.log(name, pic, email, _id);
+  const handleLogout = () => {
+    // Your logout logic goes here
+    // For example, clearing user data from state or localStorage
+    // currrentuser: {},
+    // toggelislogedin: false,
+    // usertoken:"",
+    // currrentUserOneToOneId:"",
+    dispatch(logoutcurrentuser())
+    // Redirect to the home route after logout
+    Navigate("/login");
+  };
 
   return (
-    <div className="w-full bg-purple-900 shadow-inner overflow-y-hidden h-24 shadow-purple-950 p-5 flex justify-evenly ">
-      <div>
+    <div className="relative w-full bg-purple-900 shadow-inner overflow-y-hidden h-20 mt-2 shadow-purple-950 p-4 flex justify-evenly items-center">
+      <div className="flex items-center space-x-8">
         <img
-          alt="seeting"
+          alt="settings"
           src="https://i.pinimg.com/originals/9a/9d/bb/9a9dbb94c8b4032b463e206275d965d3.png"
-          className="rounded-full h-12  bg-white cursor-pointer"
+          className="rounded-full h-12 bg-white cursor-pointer p-2"
         />
-      </div>
-      <div>
         <img
-          alt="groupchat"
+          alt="group chat"
           src="https://icons.veryicon.com/png/o/miscellaneous/linear-icon-14/group-chat-1.png"
-          className="rounded-full h-12  bg-white cursor-pointer "
+          className="rounded-full h-12 bg-white cursor-pointer p-2"
         />
-      </div>
-      <div className="flex flex-col ">
-        <img
-          alt="user"
-          src={pic}
-          className="rounded-full h-12 w-12 mx-auto bg-white cursor-pointer p-2"
-        />
-        <h1 >Logined with {email}</h1>
+        <div className="flex items-center space-x-4">
+          <img
+            alt="user"
+            src={pic}
+            className="rounded-full h-12 w-12 bg-white cursor-pointer p-2"
+          />
+          <h1 className="font-bold text-lg text-white">{name}</h1>
+        </div>
+        <button
+          onClick={handleLogout}
+          className="text-white hover:text-gray-300 ml-4"
+        >
+          Logout
+        </button>
       </div>
     </div>
   );
