@@ -9,8 +9,21 @@ const Chatheader = ({ user }) => {
   const Navigate=useNavigate();
   const dispatch = useDispatch()
 
-  const handleLogout = () => {
+  const handleLogout = async() => {
     // Your logout logic goes here
+    const response = await fetch(`/api/v1/users/logout`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    console.log(data);
     // For example, clearing user data from state or localStorage
     // currrentuser: {},
     // toggelislogedin: false,
