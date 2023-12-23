@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 const ChatInputContainer = () => {
   const [newMessage, setNewMessage] = useState("");
   const receiverID = useSelector((store) => store.User?.currrentUserOneToOneId);
-  console.log("Receiver ID from Redux store:", receiverID);
+  // console.log("Receiver ID from Redux store:", receiverID);
 
   const handelpostmessageapi = async () => {
     try {
@@ -15,18 +15,16 @@ const ChatInputContainer = () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          content: newMessage,
-          isGroupMessage: false,
-          receiver: receiverID,
+          "content": newMessage,
+          "isGroupMessage": false,
+          "reciever":receiverID
         }),
       });
       const data = await response.json();
       console.log(data);
-
       // Assuming the server responds with the updated messages
-
       // Clear the input field after sending the message
-      setNewMessage("");
+      setNewMessage("");  
     } catch (error) {
       console.error("Error sending message:", error);
     }
