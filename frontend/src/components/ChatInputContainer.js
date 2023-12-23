@@ -2,28 +2,26 @@ import { useState } from "react";
 import { useSelector } from "react-redux";
 
 const ChatInputContainer = () => {
-  const id = useSelector((store) => store.user?.currentuser._id);
-  const receverID= useSelector((store)=> store.user?.currrentUserOneToOneId)
   const [newMessage, setNewMessage] = useState("");
+  const receiverID = useSelector((store) => store.User?.currrentUserOneToOneId);
+  console.log("Receiver ID from Redux store:", receiverID);
 
-  const handleSendMessage = async () => {
-    if (!newMessage.trim()) {
-      // Don't send empty messages
-      return;
-    }
-    console.log(id);
+  const handelpostmessageapi = async () => {
     try {
-      // Send the new message to the server
-      const response = await fetch(`api/v1/messages`, {
+      console.log("reciverid", receiverID);
+      const response = await fetch(`/api/v1/messages`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ content: newMessage,
+        body: JSON.stringify({
+          content: newMessage,
           isGroupMessage: false,
-          reciever : receverID,
-         }),
+          receiver: receiverID,
+        }),
       });
+      const data = await response.json();
+      console.log(data);
 
       // Assuming the server responds with the updated messages
 
@@ -33,6 +31,15 @@ const ChatInputContainer = () => {
       console.error("Error sending message:", error);
     }
   };
+  const handleSendMessage = async () => {
+    if (!newMessage.trim() || receiverID === undefined) {
+      // Don't send empty messages or if receiverID is undefined
+      return;
+    }
+
+    handelpostmessageapi();
+  };
+
   return (
     <div className="mt-4 flex">
       <textarea

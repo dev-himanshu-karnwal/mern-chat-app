@@ -5,8 +5,8 @@ import ChatInputContainer from "./ChatInputContainer";
 import ChatMessageContextMenu from "./ChatMessageContextMenu";
 
 const PersonalChatContainer = () => {
-  const id = useSelector((store) => store.User.currrentUserOneToOneId);
-  const dispatch = useDispatch();
+  const dispatch=useDispatch()
+  const id = useSelector((store) => store.User.currrentUserOneToOneId) ;
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(false);
   const [contextMenu, setContextMenu] = useState({
@@ -39,6 +39,7 @@ const PersonalChatContainer = () => {
       fetchData();
     }
   }, [id]);
+  
 
   const handleContextMenu = (messageId) => (event) => {
     event.preventDefault();

@@ -11,7 +11,6 @@ const ChatCard = ({ item }) => {
     // Handle the click event here
     console.log("Clicked on ChatCard:"  );
     dispatch(getcurrrentUserOneToOneId(item.user._id));
-    
     // You can make an API request or navigate to a specific chat page, etc.
   };
 
