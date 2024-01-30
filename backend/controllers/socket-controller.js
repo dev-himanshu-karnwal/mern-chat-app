@@ -1,9 +1,7 @@
 exports.addUserSocketId = (req, res, next) => {
-  const { io, user, userSocketIdMapping } = req;
+  const { userSocketIdMapping } = req;
 
-//   io.on("connection", (socket) => {
-    console.log("socket id:", req.headers['x-socket-id']);
-//   });
+  userSocketIdMapping[req.user._id] = req.cookies.socketId;
 
   next();
 };

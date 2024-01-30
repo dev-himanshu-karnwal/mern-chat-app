@@ -21,12 +21,15 @@ router.use(authController.protect);
 router.get("/user/:id", messageController.getChatMessages);
 router.get("/group/:id", messageController.getGroupMessages);
 
-router.use(socketController.addUserSocketId);
-router.post("/", messageController.createMessage);
+// router.use();
+router.post(
+  "/",
+  socketController.addUserSocketId,
+  messageController.createMessage
+);
 router
   .route("/:id")
   .delete(messageController.completelyDeleteMessage)
   .patch(messageController.deleteMessage);
-
 
 module.exports = router;

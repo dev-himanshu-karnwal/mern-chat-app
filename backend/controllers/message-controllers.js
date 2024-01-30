@@ -86,7 +86,12 @@ exports.createMessage = catchAsync(async (req, res, next) => {
   }
 
   const { io, userSocketIdMapping } = req;
+
+  // userSocketIdMapping[reciever] = req.cookies.socketId;
+  console.log(userSocketIdMapping);
+
   if (userSocketIdMapping[reciever]) {
+    // io.to(userSocketIdMapping[reciever]).emit("receive-message", message);
     io.to(userSocketIdMapping[reciever]).emit("receive-message", message);
   }
 

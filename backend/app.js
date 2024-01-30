@@ -21,7 +21,13 @@ const AppError = require(path.join(__dirname, "./utils/app-error"));
 
 const app = express();
 const server = createServer(app);
-const io = socketIO(server);
+const io = socketIO(server, {
+  cors: {
+    origin: "http://localhost:3000",
+    methods: ["GET", "POST", "PATCH", "DELETE", "PUT", "HEAD"],
+    credentials: true,
+  },
+});
 
 const attachIO = (io) => (req, res, next) => {
   req.io = io;
@@ -37,7 +43,8 @@ app.use(cookieParser());
 app.use(
   cors({
     origin: "*",
-    methods: "GET,POST,PUT,PATCH,DELETE",
+    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+    credentials: true,
   })
 );
 

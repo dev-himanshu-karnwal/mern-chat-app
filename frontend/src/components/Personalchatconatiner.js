@@ -3,7 +3,8 @@ import { useSelector, useDispatch } from "react-redux";
 import { setCurrentChatMesssages } from "../utils/Userslice";
 import ChatInputContainer from "./ChatInputContainer";
 import ChatMessageContextMenu from "./ChatMessageContextMenu";
-import {receiveMessage} from './../utils/socket'
+import { receiveMessage } from "./../utils/socket";
+import { MessageSquareWarning } from "lucide-react";
 
 const PersonalChatContainer = () => {
   const dispatch = useDispatch();
@@ -36,11 +37,19 @@ const PersonalChatContainer = () => {
       }
     };
 
-    const handleReceivedMessage = (msg) => {
+    const handleReceivedMessage = (message) => {
       // setMessages((prevMessages) => [msg, ...prevMessages]);
-      console.log(msg);
+      console.log(message);
+      // message = message.data
+      const msgObj = {
+        content: message?.content,
+        _id: message?._id,
+        sender: "you",
+        time: message?.createdAt,
+      };
+      console.log(msgObj)
+      setMessages((prev) => [msgObj, ...prev]);
     };
-
 
     if (id) {
       fetchData();
@@ -70,7 +79,7 @@ const PersonalChatContainer = () => {
           },
         }
       );
-        console.log(response)
+      console.log(response);
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
@@ -180,7 +189,7 @@ const PersonalChatContainer = () => {
             ))}
         </div>
       )}
-      <ChatInputContainer  onSendMessage={setMessages}/>
+      <ChatInputContainer onSendMessage={setMessages} />
     </div>
   );
 };
