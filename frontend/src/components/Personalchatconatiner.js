@@ -172,7 +172,7 @@ const PersonalChatContainer = () => {
             ))}
         </div>
       )}
-      <ChatInputContainer />
+      <ChatInputContainer onSendMessage={setMessages}/>
     </div>
   );
 };

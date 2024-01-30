@@ -1,10 +1,13 @@
 import { useState } from "react";
 import { useSelector } from "react-redux";
-import {Send} from "lucide-react";
+import { Send } from "lucide-react";
+import { useDispatch } from "react-redux";
+import { setCurrentChatMesssages } from "../utils/Userslice";
 
-const ChatInputContainer = () => {
+const ChatInputContainer = ({ onSendMessage }) => {
   const [newMessage, setNewMessage] = useState("");
   const receiverID = useSelector((store) => store.User?.currrentUserOneToOneId);
+  const dispatch = useDispatch();
   // console.log("Receiver ID from Redux store:", receiverID);
 
   const handelpostmessageapi = async () => {
@@ -16,16 +19,24 @@ const ChatInputContainer = () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          "content": newMessage,
-          "isGroupMessage": false,
-          "reciever":receiverID
+          content: newMessage,
+          isGroupMessage: false,
+          reciever: receiverID,
         }),
       });
       const data = await response.json();
-      console.log(data);
+      const msg = data.data.message;
+      const newMsg = {
+        _id: msg._id,
+        sender: "you",
+        content: msg.content,
+        time: msg.createdAt,
+      };
+
       // Assuming the server responds with the updated messages
       // Clear the input field after sending the message
-      setNewMessage("");  
+      onSendMessage((prev) => [newMsg,...prev]);
+      setNewMessage("");
     } catch (error) {
       console.error("Error sending message:", error);
     }
@@ -36,10 +47,11 @@ const ChatInputContainer = () => {
       return;
     }
     handelpostmessageapi();
+    dispatch(setCurrentChatMesssages(newMessage));
   };
 
   return (
-    <div className="mt-4 flex justify-center align-middle">  
+    <div className="mt-4 flex justify-center align-middle">
       <textarea
         className="flex-1 pl-4 pt-2 border rounded-full mr-2 bg-[#dcf2f1] text-purple-800 dark:bg-gray-700 dark:text-gray-300"
         placeholder="Type your message..."
@@ -47,21 +59,16 @@ const ChatInputContainer = () => {
         onChange={(e) => setNewMessage(e.target.value)}
       />
       {
-      //   <button
-      //   className="bg-gray-950 text-white p-2 rounded-full h-12 w-12"
-      //   
-      // >
-      //   Send
-      // </button>
+        //   <button
+        //   className="bg-gray-950 text-white p-2 rounded-full h-12 w-12"
+        //
+        // >
+        //   Send
+        // </button>
       }
-      <div
-      className="mt-3"
-      onClick={handleSendMessage}
-      >
-      <Send size={40} 
-      />
+      <div className="mt-3" onClick={handleSendMessage}>
+        <Send size={40} />
       </div>
-      
     </div>
   );
 };
