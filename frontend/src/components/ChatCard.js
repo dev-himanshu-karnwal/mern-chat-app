@@ -16,14 +16,14 @@ const ChatCard = ({ item }) => {
 
   return (
     <div
-      className="rounded-md mt-3 flex bg-white hover:cursor-pointer"
+      className="rounded-md mt-3 flex bg-[#dcf2f1] hover:cursor-pointer"
       onClick={handleChatCardClick}
     >
-      <div>
+      <div className="flex align-middle">
         <img
           alt="user"
           src={item.user.pic}
-          className="rounded-full h-12 bg-white cursor-pointer p-2"
+          className="rounded-2xl h-12  cursor-pointer "
         />
       </div>
       <div className="ml-4 mb-2 w-full">
@@ -32,7 +32,7 @@ const ChatCard = ({ item }) => {
           <div className="flex justify-between">
             {item.latestMessage.content ? (
               <div className="font-semibold text-sm">
-                {item.latestMessage.content}
+                {item.latestMessage.content.substring(0,15)}
               </div>
             ) : (
               ""
@@ -40,7 +40,7 @@ const ChatCard = ({ item }) => {
             {formattedTime === "Invalid Date" ? (
               ""
             ) : (
-              <div className="mr-3">{formattedTime}</div>
+              <div className="mr-3 text-xs  ">{formattedTime}</div>
             )}
           </div>
         </div>

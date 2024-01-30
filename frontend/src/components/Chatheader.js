@@ -35,7 +35,7 @@ const Chatheader = ({ user }) => {
   };
 
   return (
-    <div className="relative w-full bg-purple-900 shadow-inner overflow-y-hidden h-20 mt-2 shadow-purple-950 p-4 flex justify-evenly items-center">
+    <div className="relative w-full bg-[#181346] shadow-inner overflow-y-hidden h-20 mt-1 shadow-purple-950 p-4 flex justify-evenly items-center">
       <div className="flex items-center space-x-8">
         <img
           alt="settings"

@@ -96,6 +96,7 @@ exports.completelyDeleteMessage = catchAsync(async (req, res, next) => {
   let msg;
   try {
     msg = await Message.findById(req.params.id);
+    console.log(msg)
     if (!msg) throw new Error();
 
     if (!msg.sender.equals(req.user._id))

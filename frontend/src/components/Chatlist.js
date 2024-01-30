@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from "react";
 import SearchBar from "./Searchbar";
 import ChatCard from "./ChatCard";
-import { useDispatch, useSelector } from "react-redux";
+import {  useSelector } from "react-redux";
+// import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import Personalchatconatiner from "./Personalchatconatiner";
 
 const Chatlist = () => {
-  const dispatch = useDispatch();
+  //eslint-disable-next-line 
+  //const dispatch = useDispatch();
   const navigate = useNavigate();
   const token = useSelector((store) => store.User.usertoken);
   const [finalData, setfinalData] = useState([]);
@@ -31,20 +33,20 @@ const Chatlist = () => {
       }
     };
     getchats();
-  }, []); // Empty dependency array to run the effect once on component mount
+  },[]); // Empty dependency array to run the effect once on component mount
 
   return !finalData ? (
     <div>Loading...</div>
   ) : (
-    <div className="bg-purple-700 text-white p-3 flex w-full justify-evenly">
-      <div className="bg-purple-700 text-gray-800 p-4 rounded-md">
+    <div className="bg-[#181346] text-white p-3 flex w-full justify-evenly">
+      <div className="bg-blue-900 w-80 text-gray-800 p-4 rounded-md">
         <SearchBar />
         <div
           className="h-[29rem] 
-      overflow-y-scroll scrollbar-thumb-pink-600 scrollbar-track-pink-300 bg-pink-400 rounded-2xl mt-4 p-4 mb-2 scrollbar-thin"
+      overflow-y-scroll scrollbar-thumb-purple-600 scrollbar-track-purple-300 bg-[#365486] rounded-2xl mt-4 p-4 mb-2 scrollbar-thin"
         >
           {chatitemlen === 0 ? (
-            <div className="flex justify-center text-gray-800 font-bold text-xl">
+            <div className="flex justify-center text-[#DCF2F1] font-bold text-xl">
               No recent Chats
             </div>
           ) : (

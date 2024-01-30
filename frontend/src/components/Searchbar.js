@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useDispatch } from "react-redux";
 import { getcurrrentUserOneToOneId } from "../utils/Userslice";
+import {UserSearch } from "lucide-react"
 
 const Searchbar = () => {
   const dispatch = useDispatch();
@@ -50,12 +51,11 @@ const Searchbar = () => {
         placeholder="Username or Email"
         onChange={(event) => setQuery(event.target.value)}
       />
-      <input
-        type="button"
-        value="Search"
-        className="bg-blue-500 p-2 rounded-tr-lg rounded-br-lg text-white font-semibold hover:cursor-pointer hover:bg-blue-800 transition-colors"
-        onClick={handleSearch}
-      />
+      <div className="bg-blue-500 p-2 rounded-tr-lg rounded-br-lg text-white font-semibold hover:cursor-pointer hover:bg-blue-800 transition-colors"
+      onClick={handleSearch}>
+        <UserSearch color="white" size={32} />
+      </div>
+      
       {showSuggestions ? (
         <ul className="bg-slate-50 w-full rounded-lg absolute mt-12 mr-6">
           {suggestions.map((suggestion) => (

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useSelector } from "react-redux";
+import {Send} from "lucide-react";
 
 const ChatInputContainer = () => {
   const [newMessage, setNewMessage] = useState("");
@@ -34,24 +35,33 @@ const ChatInputContainer = () => {
       // Don't send empty messages or if receiverID is undefined
       return;
     }
-
     handelpostmessageapi();
   };
 
   return (
-    <div className="mt-4 flex">
+    <div className="mt-4 flex justify-center align-middle">  
       <textarea
-        className="flex-1 p-2 border rounded mr-2 bg-purple-300 text-purple-800 dark:bg-gray-700 dark:text-gray-300"
+        className="flex-1 pl-4 pt-2 border rounded-full mr-2 bg-[#dcf2f1] text-purple-800 dark:bg-gray-700 dark:text-gray-300"
         placeholder="Type your message..."
         value={newMessage}
         onChange={(e) => setNewMessage(e.target.value)}
       />
-      <button
-        className="bg-pink-500 text-white p-2 rounded"
-        onClick={handleSendMessage}
+      {
+      //   <button
+      //   className="bg-gray-950 text-white p-2 rounded-full h-12 w-12"
+      //   
+      // >
+      //   Send
+      // </button>
+      }
+      <div
+      className="mt-3"
+      onClick={handleSendMessage}
       >
-        Send
-      </button>
+      <Send size={40} 
+      />
+      </div>
+      
     </div>
   );
 };

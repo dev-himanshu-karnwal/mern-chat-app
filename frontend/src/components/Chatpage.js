@@ -8,7 +8,7 @@ const Chatpage = () => {
   console.log(user)
   return (
     <div className="mx-auto bg-authbg bg-cover bg-center text-white bg-no-repeat min-h-screen">
-      <div className="flex justify-between ">
+      <div className="flex justify-between  ">
         <Chatlist />
       </div>
       <Chatheader user={user} />

@@ -5,8 +5,8 @@ import ChatInputContainer from "./ChatInputContainer";
 import ChatMessageContextMenu from "./ChatMessageContextMenu";
 
 const PersonalChatContainer = () => {
-  const dispatch=useDispatch()
-  const id = useSelector((store) => store.User.currrentUserOneToOneId) ;
+  const dispatch = useDispatch();
+  const id = useSelector((store) => store.User.currrentUserOneToOneId);
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(false);
   const [contextMenu, setContextMenu] = useState({
@@ -39,7 +39,6 @@ const PersonalChatContainer = () => {
       fetchData();
     }
   }, [id]);
-  
 
   const handleContextMenu = (messageId) => (event) => {
     event.preventDefault();
@@ -54,13 +53,16 @@ const PersonalChatContainer = () => {
     console.log("Permanently delete message with ID:", contextMenu.messageId);
     // Add logic for permanently deleting the message
     try {
-      const response = await fetch(`api/v1/messages/${contextMenu.messageId}`, {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-
+      const response = await fetch(
+        `/api/v1/messages/${contextMenu.messageId}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+        console.log(response)
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
@@ -76,19 +78,21 @@ const PersonalChatContainer = () => {
     } catch (error) {
       console.error("Error deleting message:", error);
     }
-
   };
 
   const handlePersonallyDelete = async () => {
     console.log("Personally delete message with ID:", contextMenu.messageId);
 
     try {
-      const response = await fetch(`api/v1/messages/${contextMenu.messageId}`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+      const response = await fetch(
+        `/api/v1/messages/${contextMenu.messageId}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
@@ -126,7 +130,7 @@ const PersonalChatContainer = () => {
   }, []);
 
   return (
-    <div className="w-2/3 bg-purple-700 dark:bg-gray-800 text-white dark:text-white p-3 overflow-y-hidden flex flex-col border border-purple-900 rounded-md">
+    <div className="w-2/3 bg-[#3461af] dark:bg-gray-800 text-white dark:text-white p-3 overflow-y-hidden flex flex-col border border-purple-900 rounded-md">
       {loading ? (
         <p>Loading...</p>
       ) : (
