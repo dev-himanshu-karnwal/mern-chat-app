@@ -10,9 +10,9 @@ const signToken = (id) =>
   jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: "30 days" });
 
 exports.signUp = catchAsync(async (req, res, next) => {
-  // console.log(req.body)
+
   const { name, email, password, confirmPassword, pic } = req.body;
-  // console.log(name, email, password, confirmPassword, pic)
+
   if (!name || !email || !password || !confirmPassword) {
     return next(
       new AppError("Enter Name, Email, Password and Confirm Password", 400)
