@@ -9,17 +9,24 @@ const messageController = require(path.join(
   "./../controllers/message-controllers"
 ));
 
+const socketController = require(path.join(
+  __dirname,
+  "./../controllers/socket-controller"
+));
+
 const router = express.Router();
 
 router.use(authController.protect);
 
+router.get("/user/:id", messageController.getChatMessages);
+router.get("/group/:id", messageController.getGroupMessages);
+
+router.use(socketController.addUserSocketId);
 router.post("/", messageController.createMessage);
 router
   .route("/:id")
   .delete(messageController.completelyDeleteMessage)
   .patch(messageController.deleteMessage);
 
-router.get("/user/:id", messageController.getChatMessages);
-router.get("/group/:id", messageController.getGroupMessages);
 
 module.exports = router;

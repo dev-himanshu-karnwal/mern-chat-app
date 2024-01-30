@@ -2,6 +2,9 @@ const path = require("path");
 const express = require("express");
 const morgan = require("morgan");
 const cookieParser = require("cookie-parser");
+const cors = require("cors");
+const { createServer } = require("http");
+const socketIO = require("socket.io");
 
 const userRouter = require(path.join(__dirname, "./routes/user-routes.js"));
 const groupRouter = require(path.join(__dirname, "./routes/group-routes.js"));
@@ -17,10 +20,26 @@ const globalErrorHandler = require(path.join(
 const AppError = require(path.join(__dirname, "./utils/app-error"));
 
 const app = express();
+const server = createServer(app);
+const io = socketIO(server);
+
+const attachIO = (io) => (req, res, next) => {
+  req.io = io;
+  req.userSocketIdMapping = {};
+  return next();
+};
+app.use(attachIO(io));
 
 app.use(express.json());
 app.use(morgan("dev"));
 app.use(cookieParser());
+
+app.use(
+  cors({
+    origin: "*",
+    methods: "GET,POST,PUT,PATCH,DELETE",
+  })
+);
 
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/chats", chatRouter);
@@ -33,4 +52,4 @@ app.use("*", (req, res, next) =>
 
 app.use(globalErrorHandler);
 
-module.exports = app;
+module.exports = server;

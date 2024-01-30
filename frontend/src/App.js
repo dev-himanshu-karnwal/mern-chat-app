@@ -6,6 +6,8 @@ import Login from "./components/Login";
 import Chatpage from "./components/Chatpage";
 import { Provider } from "react-redux";
 import Store from "./utils/Store";
+import { io } from "socket.io-client";
+
 
 const App = () => {
   return (

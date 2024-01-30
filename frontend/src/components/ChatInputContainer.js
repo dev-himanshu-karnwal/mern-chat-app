@@ -1,13 +1,10 @@
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import { Send } from "lucide-react";
-import { useDispatch } from "react-redux";
-import { setCurrentChatMesssages } from "../utils/Userslice";
 
 const ChatInputContainer = ({ onSendMessage }) => {
   const [newMessage, setNewMessage] = useState("");
   const receiverID = useSelector((store) => store.User?.currrentUserOneToOneId);
-  const dispatch = useDispatch();
   // console.log("Receiver ID from Redux store:", receiverID);
 
   const handelpostmessageapi = async () => {
@@ -25,18 +22,18 @@ const ChatInputContainer = ({ onSendMessage }) => {
         }),
       });
       const data = await response.json();
-      const msg = data.data.message;
-      const newMsg = {
-        _id: msg._id,
-        sender: "you",
-        content: msg.content,
-        time: msg.createdAt,
-      };
-
+      console.log(data);
       // Assuming the server responds with the updated messages
       // Clear the input field after sending the message
-      onSendMessage((prev) => [newMsg,...prev]);
       setNewMessage("");
+      const msg = data.data.message;
+      const msgObj = {
+        content: msg.content,
+        _id: msg._id,
+        sender: "you",
+        time: msg.createdAt,
+      };
+      onSendMessage((prev) => [msgObj, ...prev]);
     } catch (error) {
       console.error("Error sending message:", error);
     }
@@ -47,7 +44,6 @@ const ChatInputContainer = ({ onSendMessage }) => {
       return;
     }
     handelpostmessageapi();
-    dispatch(setCurrentChatMesssages(newMessage));
   };
 
   return (

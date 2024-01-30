@@ -85,6 +85,11 @@ exports.createMessage = catchAsync(async (req, res, next) => {
     }
   }
 
+  const { io, userSocketIdMapping } = req;
+  if (userSocketIdMapping[reciever]) {
+    io.to(userSocketIdMapping[reciever]).emit("receive-message", message);
+  }
+
   res.status(201).json({
     status: "success",
     message: "Message successfully created",
@@ -96,7 +101,7 @@ exports.completelyDeleteMessage = catchAsync(async (req, res, next) => {
   let msg;
   try {
     msg = await Message.findById(req.params.id);
-    console.log(msg)
+    console.log(msg);
     if (!msg) throw new Error();
 
     if (!msg.sender.equals(req.user._id))

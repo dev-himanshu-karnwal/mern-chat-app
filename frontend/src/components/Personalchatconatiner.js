@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { setCurrentChatMesssages } from "../utils/Userslice";
 import ChatInputContainer from "./ChatInputContainer";
 import ChatMessageContextMenu from "./ChatMessageContextMenu";
+import {receiveMessage} from './../utils/socket'
 
 const PersonalChatContainer = () => {
   const dispatch = useDispatch();
@@ -35,8 +36,15 @@ const PersonalChatContainer = () => {
       }
     };
 
+    const handleReceivedMessage = (msg) => {
+      // setMessages((prevMessages) => [msg, ...prevMessages]);
+      console.log(msg);
+    };
+
+
     if (id) {
       fetchData();
+      receiveMessage(handleReceivedMessage);
     }
   }, [id]);
 
@@ -172,7 +180,7 @@ const PersonalChatContainer = () => {
             ))}
         </div>
       )}
-      <ChatInputContainer onSendMessage={setMessages}/>
+      <ChatInputContainer  onSendMessage={setMessages}/>
     </div>
   );
 };
