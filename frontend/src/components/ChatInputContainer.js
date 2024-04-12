@@ -4,12 +4,14 @@ import { Send } from "lucide-react";
 
 const ChatInputContainer = ({ onSendMessage }) => {
   const [newMessage, setNewMessage] = useState("");
+  // const [isSending, setIsSending] = useState(false);
   const receiverID = useSelector((store) => store.User?.currrentUserOneToOneId);
   // console.log("Receiver ID from Redux store:", receiverID);
 
   const handelpostmessageapi = async () => {
     try {
-      console.log("reciverid", receiverID);
+      setNewMessage("");
+      // setIsSending(true);
       const response = await fetch(`/api/v1/messages`, {
         method: "POST",
         headers: {
@@ -25,8 +27,10 @@ const ChatInputContainer = ({ onSendMessage }) => {
       console.log(data);
       // Assuming the server responds with the updated messages
       // Clear the input field after sending the message
-      setNewMessage("");
+      // setIsSending(false);
+      console.log(data);
       const msg = data.data.message;
+      console.log(msg);
       const msgObj = {
         content: msg.content,
         _id: msg._id,
@@ -54,14 +58,7 @@ const ChatInputContainer = ({ onSendMessage }) => {
         value={newMessage}
         onChange={(e) => setNewMessage(e.target.value)}
       />
-      {
-        //   <button
-        //   className="bg-gray-950 text-white p-2 rounded-full h-12 w-12"
-        //
-        // >
-        //   Send
-        // </button>
-      }
+
       <div className="mt-3" onClick={handleSendMessage}>
         <Send size={40} />
       </div>

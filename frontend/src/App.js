@@ -8,7 +8,6 @@ import { Provider } from "react-redux";
 import Store from "./utils/Store";
 import { io } from "socket.io-client";
 
-
 const App = () => {
   return (
     <>
@@ -18,10 +17,11 @@ const App = () => {
     </>
   );
 };
-export const  appRouter = createBrowserRouter([
+
+export const appRouter = createBrowserRouter([
   {
     path: "/",
-    element: <App/>,
+    element: <App />,
     children: [
       {
         path: "/",
@@ -35,11 +35,8 @@ export const  appRouter = createBrowserRouter([
         path: "/login",
         element: <Login />,
       },
-      
     ],
   },
 ]);
 
-export default App
-
-
+export default App;

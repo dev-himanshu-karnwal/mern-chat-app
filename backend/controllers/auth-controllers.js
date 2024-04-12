@@ -10,7 +10,6 @@ const signToken = (id) =>
   jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: "30 days" });
 
 exports.signUp = catchAsync(async (req, res, next) => {
-
   const { name, email, password, confirmPassword, pic } = req.body;
 
   if (!name || !email || !password || !confirmPassword) {
@@ -98,6 +97,7 @@ exports.protect = catchAsync(async (req, res, next) => {
     if (!user) return next(askToLoginError);
 
     req.user = user;
+    req.userSocketIdMapping[user._id] = req.cookies.socketId;
   } catch (err) {
     return next(askToLoginError);
   }

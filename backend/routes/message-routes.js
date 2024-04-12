@@ -21,12 +21,7 @@ router.use(authController.protect);
 router.get("/user/:id", messageController.getChatMessages);
 router.get("/group/:id", messageController.getGroupMessages);
 
-// router.use();
-router.post(
-  "/",
-  socketController.addUserSocketId,
-  messageController.createMessage
-);
+router.post("/", messageController.createMessage);
 router
   .route("/:id")
   .delete(messageController.completelyDeleteMessage)

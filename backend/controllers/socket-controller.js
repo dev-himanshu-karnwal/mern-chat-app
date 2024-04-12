@@ -1,7 +1,5 @@
-exports.addUserSocketId = (req, res, next) => {
-  const { userSocketIdMapping } = req;
-
-  userSocketIdMapping[req.user._id] = req.cookies.socketId;
-
-  next();
+exports.attachIO = (io, userSocketIdMapping) => (req, res, next) => {
+  req.io = io;
+  req.userSocketIdMapping = userSocketIdMapping;
+  return next();
 };

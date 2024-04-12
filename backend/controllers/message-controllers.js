@@ -88,7 +88,6 @@ exports.createMessage = catchAsync(async (req, res, next) => {
   const { io, userSocketIdMapping } = req;
 
   // userSocketIdMapping[reciever] = req.cookies.socketId;
-  console.log(userSocketIdMapping);
 
   if (userSocketIdMapping[reciever]) {
     // io.to(userSocketIdMapping[reciever]).emit("receive-message", message);
@@ -106,7 +105,6 @@ exports.completelyDeleteMessage = catchAsync(async (req, res, next) => {
   let msg;
   try {
     msg = await Message.findById(req.params.id);
-    console.log(msg);
     if (!msg) throw new Error();
 
     if (!msg.sender.equals(req.user._id))
@@ -150,6 +148,12 @@ exports.completelyDeleteMessage = catchAsync(async (req, res, next) => {
       },
       { latestMessage }
     );
+  }
+
+  const { io, userSocketIdMapping } = req;
+
+  if (userSocketIdMapping[msg.reciever]) {
+    io.to(userSocketIdMapping[msg.reciever]).emit("delete-message", msg._id);
   }
 
   res.status(204).json({

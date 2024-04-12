@@ -42,6 +42,8 @@ const Login = () => {
         theme: "dark",
       });
 
+      document.title = Data.data.user.name;
+
       dispatch(adduser(Data.data.user));
       dispatch(toggelislogedin());
       dispatch(usertoken(Data.token));

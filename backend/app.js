@@ -17,6 +17,10 @@ const globalErrorHandler = require(path.join(
   __dirname,
   "./controllers/error-controller"
 ));
+const { attachIO } = require(path.join(
+  __dirname,
+  "./controllers/socket-controller"
+));
 const AppError = require(path.join(__dirname, "./utils/app-error"));
 
 const app = express();
@@ -29,12 +33,8 @@ const io = socketIO(server, {
   },
 });
 
-const attachIO = (io) => (req, res, next) => {
-  req.io = io;
-  req.userSocketIdMapping = {};
-  return next();
-};
-app.use(attachIO(io));
+const userSocketIdMapping = {};
+app.use(attachIO(io, userSocketIdMapping));
 
 app.use(express.json());
 app.use(morgan("dev"));

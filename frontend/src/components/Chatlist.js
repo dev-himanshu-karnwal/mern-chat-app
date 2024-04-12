@@ -1,14 +1,11 @@
 import React, { useEffect, useState } from "react";
 import SearchBar from "./Searchbar";
 import ChatCard from "./ChatCard";
-import {  useSelector } from "react-redux";
-// import { useDispatch, useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import Personalchatconatiner from "./Personalchatconatiner";
 
 const Chatlist = () => {
-  //eslint-disable-next-line 
-  //const dispatch = useDispatch();
   const navigate = useNavigate();
   const token = useSelector((store) => store.User.usertoken);
   const [finalData, setfinalData] = useState([]);
@@ -24,7 +21,7 @@ const Chatlist = () => {
         },
       });
       const data = await res.json();
-      console.log(token,data)
+      console.log(token, data);
       if (data.message === "you are not logged in. Login to continue..") {
         navigate("/login");
       } else {
@@ -33,10 +30,10 @@ const Chatlist = () => {
       }
     };
     getchats();
-  },[]); // Empty dependency array to run the effect once on component mount
+  }, []); // Empty dependency array to run the effect once on component mount
 
   return !finalData ? (
-    <div>Loading...</div>
+    <div>No recent Chats</div>
   ) : (
     <div className="bg-[#181346] text-white p-3 flex w-full justify-evenly">
       <div className="bg-blue-900 w-80 text-gray-800 p-4 rounded-md">
@@ -47,7 +44,8 @@ const Chatlist = () => {
         >
           {chatitemlen === 0 ? (
             <div className="flex justify-center text-[#DCF2F1] font-bold text-xl">
-              No recent Chats
+              No Recent Chats
+              {/* <span class="loader"></span>*/}
             </div>
           ) : (
             finalData.map((item) => <ChatCard key={item._id} item={item} />)

@@ -7,7 +7,8 @@ const Userslice = createSlice({
     toggelislogedin: false,
     usertoken: "",
     currrentUserOneToOneId: "",
-    currentChatMesssages:{},
+    currentChatMesssages: {},
+    showInputContainer: false,
   },
   reducers: {
     adduser: (state, action) => {
@@ -28,9 +29,15 @@ const Userslice = createSlice({
       state.usertoken = "";
       state.currrentUserOneToOneId = "";
     },
-    setCurrentChatMesssages:(state,action)=>{
-      state.currentChatMesssages={... state.currentChatMesssages,...action.payload}
-    }
+    setCurrentChatMesssages: (state, action) => {
+      state.currentChatMesssages = {
+        ...state.currentChatMesssages,
+        ...action.payload,
+      };
+    },
+    toggelshowInputContainer: (state) => {
+      state.showInputContainer = true;
+    },
   },
 });
 
@@ -41,5 +48,6 @@ export const {
   getcurrrentUserOneToOneId,
   logoutcurrentuser,
   setCurrentChatMesssages,
+  toggelshowInputContainer,
 } = Userslice.actions;
 export default Userslice.reducer;

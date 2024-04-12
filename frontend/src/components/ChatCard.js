@@ -1,5 +1,5 @@
 import React from "react";
-import { getcurrrentUserOneToOneId } from "../utils/Userslice";
+import { getcurrrentUserOneToOneId ,toggelshowInputContainer} from "../utils/Userslice";
 import { useDispatch } from "react-redux";
 
 const ChatCard = ({ item }) => {
@@ -9,8 +9,9 @@ const ChatCard = ({ item }) => {
   console.log(item);
   const handleChatCardClick = () => {
     // Handle the click event here
-    console.log("Clicked on ChatCard:"  );
+    console.log("Clicked on ChatCard:");
     dispatch(getcurrrentUserOneToOneId(item.user._id));
+    dispatch(toggelshowInputContainer());
     // You can make an API request or navigate to a specific chat page, etc.
   };
 
